@@ -1,4 +1,4 @@
-package by.bsuir.vitaliybaranov.myapplication.ui.theme
+package by.bsuir.myapplication.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
