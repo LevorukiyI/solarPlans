@@ -1,4 +1,4 @@
-package by.bsuir.vitaliybaranov.myapplication
+package by.bsuir.myapplication
 
 import org.junit.Test
 
