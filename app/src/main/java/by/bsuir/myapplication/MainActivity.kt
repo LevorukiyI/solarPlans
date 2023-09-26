@@ -122,13 +122,15 @@ class MainActivity : ComponentActivity() {
                 Text(
                     text = stringResource(id = R.string.app_name),
                     modifier = Modifier.padding(bottom = 8.dp, top = 16.dp),
-                    fontSize = 30.sp
+                    fontSize = 30.sp,
+                    color = text_color
                 )
                 // Версия
                 Text(
                     text = stringResource(id = R.string.version),
                     modifier = Modifier.padding(bottom = 8.dp),
-                    fontSize = 15.sp
+                    fontSize = 15.sp,
+                    color = text_color
                 )
 
                 // Лого
@@ -144,7 +146,8 @@ class MainActivity : ComponentActivity() {
                 Text(
                     text = stringResource(id = R.string.about_us),
                     modifier = Modifier.padding(bottom = 13.dp),
-                    fontSize = 30.sp
+                    fontSize = 30.sp,
+                    color = text_color
                 )
                 Column {
 
@@ -166,7 +169,8 @@ class MainActivity : ComponentActivity() {
                     text = stringResource(id = R.string.contacts),
                     modifier = Modifier.padding( top = 15.dp, bottom = 30.dp),
                     textAlign = TextAlign.Center,
-                    fontSize = 25.sp
+                    fontSize = 25.sp,
+                    color = text_color
                 )
                 // Ссылки на соцсети
                 //#TODO
