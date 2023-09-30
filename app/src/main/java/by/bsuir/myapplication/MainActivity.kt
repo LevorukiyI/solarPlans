@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavHost
 import by.bsuir.myapplication.ui.theme.background_color
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
@@ -50,43 +51,44 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val viewModel = viewModel<MainViewModel>()
-            val dialogQueue = viewModel.visiblePermissionDialogQueue
+//            val viewModel = viewModel<MainViewModel>()
+//            val dialogQueue = viewModel.visiblePermissionDialogQueue
+//
+//            MyApplicationTheme {
+//
+//                val viewModel = viewModel<MainViewModel>()
+//                val dialogQueue = viewModel.visiblePermissionDialogQueue
+//
+//
+//
+//                val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
+//                    contract = ActivityResultContracts.RequestMultiplePermissions(),
+//                    onResult = { perms ->
+//                        permissionsToRequest.forEach { permission ->
+//                            viewModel.onPermissionResult(
+//                                permission = permission,
+//                                isGranted = perms[permission] == true
+//                            )
+//                        }
+//                    }
+//                )
+//
+//                //multiplePermissionResultLauncher.launch(permissionsToRequest)
+//                // A surface container using the 'background' color from the theme
+//
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = background_color
+//
+//                ) {
+//                    AboutScreen()
+//
+//
+//                }
+//
+//            }
 
-            MyApplicationTheme {
-
-                val viewModel = viewModel<MainViewModel>()
-                val dialogQueue = viewModel.visiblePermissionDialogQueue
-
-
-
-                val multiplePermissionResultLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestMultiplePermissions(),
-                    onResult = { perms ->
-                        permissionsToRequest.forEach { permission ->
-                            viewModel.onPermissionResult(
-                                permission = permission,
-                                isGranted = perms[permission] == true
-                            )
-                        }
-                    }
-                )
-
-                //multiplePermissionResultLauncher.launch(permissionsToRequest)
-                // A surface container using the 'background' color from the theme
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = background_color
-
-                ) {
-
-
-                    AboutScreen()
-
-
-                }
-            }
+            Navigation()
         }
     }
 
