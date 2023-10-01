@@ -19,6 +19,14 @@ import androidx.navigation.compose.rememberNavController
 import by.bsuir.myapplication.navigation.Navigation
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.background_color
+import android.R
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
+
+
+
+
 
 class MainActivity : ComponentActivity() {
 
@@ -28,19 +36,19 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            MyApplicationTheme {
+           MyApplicationTheme {
 
                 val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
                 val navController = rememberNavController();
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = background_color
+                    color = MaterialTheme.colorScheme.surface
 
                 ) {
                     Scaffold(
                         bottomBar = {
-                            BottomNavigation {
+                            BottomNavigation(backgroundColor = MaterialTheme.colorScheme.background) {
                                 bottomItems.forEach { screen ->
                                     BottomNavigationItem(
                                         selected = false,
@@ -49,13 +57,13 @@ class MainActivity : ComponentActivity() {
                                                 launchSingleTop = true
                                             }
                                         },
-                                        label = { Text(stringResource(id = screen.titleResourceId)) },
+                                        label = { Text(stringResource(id = screen.titleResourceId),color = MaterialTheme.colorScheme.tertiary) },
                                         icon = {
 
                                         })
                                 }
                             }
-                        }
+                        }, backgroundColor = MaterialTheme.colorScheme.surface
                     ) {
                         Navigation(navController = navController)
                     }

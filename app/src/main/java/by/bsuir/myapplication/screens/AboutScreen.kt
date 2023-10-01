@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,13 +28,16 @@ import androidx.compose.ui.unit.sp
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun AboutScreen(){
     val aboutMeStrings = listOf<Int>(R.string.about1, R.string.about2, R.string.about3);
 
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -44,13 +49,15 @@ fun AboutScreen(){
             Text(
                 text = stringResource(id = R.string.app_name),
                 modifier = Modifier.padding(bottom = 8.dp, top = 16.dp),
-                fontSize = 30.sp
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.primary
             )
             // Версия
             Text(
                 text = stringResource(id = R.string.version),
                 modifier = Modifier.padding(bottom = 8.dp),
-                fontSize = 15.sp
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.primary
             )
 
             // Лого
@@ -66,7 +73,8 @@ fun AboutScreen(){
             Text(
                 text = stringResource(id = R.string.about_us),
                 modifier = Modifier.padding(bottom = 13.dp),
-                fontSize = 30.sp
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.primary
             )
             Column {
 
@@ -79,7 +87,7 @@ fun AboutScreen(){
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         fontSize = 20.sp,
-                        color = text_color
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
 
@@ -88,7 +96,8 @@ fun AboutScreen(){
                 text = stringResource(id = R.string.contacts),
                 modifier = Modifier.padding( top = 15.dp, bottom = 30.dp),
                 textAlign = TextAlign.Center,
-                fontSize = 25.sp
+                fontSize = 25.sp,
+                color = MaterialTheme.colorScheme.primary
             )
             // Ссылки на соцсети
             //#TODO
@@ -100,8 +109,8 @@ fun AboutScreen(){
                 val ctx = LocalContext.current
 
                 val url_vk = "https://vk.com"
-                val url_git = "https://github.com/LevorukiyI"
-                val url_tel = "https://t.me/DontShareMyUsername"
+                val url_git = "https://github.com"
+                val url_tel = "https://t.me"
                 IconButton(
                     onClick =
                     {
