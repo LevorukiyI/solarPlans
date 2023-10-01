@@ -6,4 +6,7 @@
     <string name="about1">This application is designed for convenient management of your own plans</string>
     <string name="about2">You can track the weather and describe your feelings</string>
     <string name="about3">Enjoy using the app</string>
+    <string name="title_main">Main</string>
+    <string name="title_weather">Weather</string>
+    <string name="title_about">About</string>
 </resources>
