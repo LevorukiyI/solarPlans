@@ -1,4 +1,6 @@
 <resources>
+    
+<!--About Us strings-->
     <string name="app_name">Solar plans</string>
     <string name="version">version 1.0.1</string>
     <string name="about_us">About app</string>
@@ -6,4 +8,6 @@
     <string name="about1">This application is designed for convenient management of your own plans</string>
     <string name="about2">You can track the weather and describe your feelings</string>
     <string name="about3">Enjoy using the app</string>
+<!--Notes strings-->
+    <string name="note_label">Note</string>
 </resources>

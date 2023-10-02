@@ -82,13 +82,15 @@ class MainActivity : ComponentActivity() {
                 ) {
 
 
-                    AboutScreen()
+                    NoteFront.MakeNotesScreen();
 
 
                 }
             }
         }
     }
+
+
 
     @Composable
     fun AboutScreen() {
