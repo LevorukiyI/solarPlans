@@ -72,12 +72,24 @@ private fun HomeScreenContent(
     onAdd: () -> Unit,
     navController: NavController
 ) {
-    LazyColumn(modifier = Modifier.padding(bottom = 50.dp)){
+    if(items.size!=0){
+        LazyColumn(modifier = Modifier.padding(bottom = 50.dp)){
 
-        itemsIndexed(items = items) { index, note ->
-            NoteItem(note = note, onRemove = onRemove, navController = navController)
+            itemsIndexed(items = items) { index, note ->
+                NoteItem(note = note, onRemove = onRemove, navController = navController)
+            }
         }
     }
+    else{
+        Image(
+            painter = painterResource(id = R.drawable.man),
+            contentDescription = "Лого приложения",
+            modifier = Modifier
+                .size(400.dp)
+                .padding(vertical = 8.dp),
+        )
+    }
+
 }
 
 @Composable
