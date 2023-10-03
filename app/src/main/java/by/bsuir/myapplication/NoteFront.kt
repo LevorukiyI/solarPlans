@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
@@ -143,6 +146,14 @@ class NoteFront {
 
                     )
                     note.note = text
+
+                    Button(onClick = {
+                        //navController.navigate(Screen.AddScreen.withArgs("aaa"))
+                    }, colors =  ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.primary)){
+                        androidx.compose.material.Text(text = "Add")
+                    }
 
                 }
             }

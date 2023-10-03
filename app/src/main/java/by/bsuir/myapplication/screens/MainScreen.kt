@@ -14,11 +14,7 @@ import by.bsuir.myapplication.NoteFront.Companion.MakeNotesScreen
 
 @Composable
 fun MainScreen(navController: NavController){
-    Button(onClick = {
-        navController.navigate(Screen.AddScreen.withArgs("aaa"))
-    }, colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
-        Text(text = "Add")
-    }
+
 
     MakeNotesScreen()
 }
