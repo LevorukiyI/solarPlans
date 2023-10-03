@@ -9,11 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
 import androidx.compose.material.Text
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,13 +31,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.DefaultTintColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,7 +53,7 @@ import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(navController: NavController){
 //    Button(onClick = {
@@ -80,29 +89,7 @@ fun MainScreen(navController: NavController){
                     }
                 }
 
-                // Название приложения
-                androidx.compose.material3.Text(
-                    text = stringResource(id = R.string.app_name),
-                    modifier = Modifier.padding(bottom = 8.dp, top = 16.dp),
-                    fontSize = 30.sp,
-                    color = text_color
-                )
-                // Версия
-                androidx.compose.material3.Text(
-                    text = stringResource(id = R.string.version),
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    fontSize = 15.sp,
-                    color = text_color
-                )
 
-                // Лого
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "Лого приложения",
-                    modifier = Modifier
-                        .size(250.dp)
-                        .padding(vertical = 8.dp)
-                )
 
                 var date by remember { mutableStateOf("") }
 
@@ -155,16 +142,49 @@ fun MainScreen(navController: NavController){
 
                     )
 
+                val list = remember {
+                    mutableStateListOf<String>()
+                }
+
                 Button(onClick = {
                     //navController.navigate(Screen.AddScreen.withArgs("aaa"))
                     val note: Note = Note()
                     note.date = date
                     note.note = text
-                }, colors =  ButtonDefaults.buttonColors(
+
+                    list.add(note.note)
+
+                    text = ""
+                    date = ""
+
+                }, enabled = text != "",
+                    colors =  ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colorScheme.background,
-                    contentColor = MaterialTheme.colorScheme.primary)){
-                    Text(text = "Add")
+                    contentColor = MaterialTheme.colorScheme.primary,
+
+                        )){
+
+                    Text(
+                        text = "Add",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            //background = MaterialTheme.colorScheme.background,
+                        )
+                    )
                 }
+                
+                LazyColumn(){
+                    items(list){ data ->
+                        Card(elevation = 8.dp){
+                            ListItem(){
+                                Text(text = data)
+                            }
+                        }
+                    }
+                }
+
+                    //#TODO output notes
 
             }
         }
