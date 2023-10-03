@@ -154,8 +154,8 @@ fun MainScreen(navController: NavController){
 
                     list.add(note.note)
 
-                    text = ""
                     date = ""
+                    text = ""
 
                 }, enabled = text != "",
                     colors =  ButtonDefaults.buttonColors(
