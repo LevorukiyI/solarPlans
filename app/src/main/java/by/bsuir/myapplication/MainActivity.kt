@@ -22,10 +22,11 @@ import by.bsuir.myapplication.ui.theme.background_color
 import android.R
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-
-
-
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 
 class MainActivity : ComponentActivity() {
@@ -47,12 +48,19 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         bottomBar = {
                             BottomNavigation(backgroundColor = MaterialTheme.colorScheme.background) {
+                                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                                val currentDestination = navBackStackEntry?.destination
+
                                 bottomItems.forEach { screen ->
                                     BottomNavigationItem(
-                                        selected = false,
+                                        selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,
                                         onClick = {
                                             navController.navigate(screen.route) {
+                                            popUpTo(navController.graph.findStartDestination().id){
+                                                saveState = true
+                                            }
                                                 launchSingleTop = true
+                                                restoreState = true
                                             }
                                         },
                                         label = { Text(stringResource(id = screen.titleResourceId),color = MaterialTheme.colorScheme.tertiary) },
