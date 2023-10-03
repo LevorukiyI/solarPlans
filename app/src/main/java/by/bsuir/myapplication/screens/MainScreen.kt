@@ -53,7 +53,6 @@ fun MainScreen(navController: NavController){
 //        Text(text = "Add")
 //    }
 
-    val note: Note = Note()
 
     MaterialTheme{
         Box(
@@ -130,7 +129,6 @@ fun MainScreen(navController: NavController){
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
-                note.date = date
 
                 var text by remember {
                     mutableStateOf("")
@@ -156,10 +154,12 @@ fun MainScreen(navController: NavController){
                     maxLines = 7,
 
                     )
-                note.note = text
 
                 Button(onClick = {
                     //navController.navigate(Screen.AddScreen.withArgs("aaa"))
+                    val note: Note = Note()
+                    note.date = date
+                    note.note = text
                 }, colors =  ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.primary)){
