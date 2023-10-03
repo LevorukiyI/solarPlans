@@ -76,6 +76,7 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
 }
 

@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import by.bsuir.myapplication.navigation.Screen
 import androidx.compose.material3.MaterialTheme
+import by.bsuir.myapplication.NoteFront.Companion.MakeNotesScreen
+
 @Composable
 fun MainScreen(navController: NavController){
     Button(onClick = {
@@ -17,4 +19,6 @@ fun MainScreen(navController: NavController){
     }, colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
         Text(text = "Add")
     }
+
+    MakeNotesScreen()
 }
