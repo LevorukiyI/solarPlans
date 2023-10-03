@@ -50,7 +50,7 @@ fun HomeScreen(navController: NavController){
     MaterialTheme {
         Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
                 Button(onClick = {
-                    navController.navigate(Screen.AddScreen.withArgs("aaa"))
+                    navController.navigate(Screen.AddScreen.route)
                 }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = "Add note", fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
