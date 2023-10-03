@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +41,7 @@ class NoteFront {
     companion object {
         @OptIn(ExperimentalMaterial3Api::class)
         @Composable
-        fun MakeNotesScreen() : Note {
+        fun MakeNotesScreen() {
             val note: Note = Note()
 
             Box(
@@ -92,6 +93,32 @@ class NoteFront {
                             .padding(vertical = 8.dp)
                     )
 
+                    var date by remember { mutableStateOf("")}
+
+                    OutlinedTextField(
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            //containerColor = Color.White,
+                            focusedBorderColor = Color.White,
+                            unfocusedBorderColor = secondary_color,
+                            textColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        value = date,
+                        onValueChange = {newText ->
+                            if (newText.length <= DateDefaults.DATE_LENGTH) {
+                                date = newText
+                            }
+                        },
+                        visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
+                        label = {
+                            Text(text = stringResource(id = R.string.date_label),
+                                color = text_color)
+                        },
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+
+                    note.date = date
+
                     var text by remember {
                         mutableStateOf("")
                     }
@@ -117,13 +144,9 @@ class NoteFront {
                     )
                     note.note = text
 
-                    var date by remember { mutableStateOf("")}
-
-
                 }
             }
 
-            return note
         }
     }
 }

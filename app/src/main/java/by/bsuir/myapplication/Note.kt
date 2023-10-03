@@ -5,4 +5,8 @@ class Note {
         set(value){
             field = value
         }
+    var date: String =""
+        set(value){
+            field = value
+        }
 }
