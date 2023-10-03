@@ -41,124 +41,13 @@ import by.bsuir.vitaliybaranov.myapplication.R
 
 class NoteFront {
 
-    companion object {
         @OptIn(ExperimentalMaterial3Api::class)
         @Composable
         fun MakeNotesScreen() {
-            val note: Note = Note()
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .background(secondary_color)){
-                        IconButton(
-                            onClick = {  }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_back),
-                                contentDescription = "Назад",
-                                modifier = Modifier.size(20.dp),
-                                tint = Color.White
-                            )
 
-                        }
-                    }
-
-                    // Название приложения
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        modifier = Modifier.padding(bottom = 8.dp, top = 16.dp),
-                        fontSize = 30.sp,
-                        color = text_color
-                    )
-                    // Версия
-                    Text(
-                        text = stringResource(id = R.string.version),
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        fontSize = 15.sp,
-                        color = text_color
-                    )
-
-                    // Лого
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "Лого приложения",
-                        modifier = Modifier
-                            .size(250.dp)
-                            .padding(vertical = 8.dp)
-                    )
-
-                    var date by remember { mutableStateOf("")}
-
-                    OutlinedTextField(
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            //containerColor = Color.White,
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = secondary_color,
-                            textColor = MaterialTheme.colorScheme.primary,
-                        ),
-                        value = date,
-                        onValueChange = {newText ->
-                            if (newText.length <= DateDefaults.DATE_LENGTH) {
-                                date = newText
-                            }
-                        },
-                        visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
-                        label = {
-                            Text(text = stringResource(id = R.string.date_label),
-                                color = text_color)
-                        },
-                        maxLines = 1,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-
-                    note.date = date
-
-                    var text by remember {
-                        mutableStateOf("")
-                    }
-
-                    OutlinedTextField(
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            //containerColor = Color.White,
-                            focusedBorderColor = Color.White,
-                            unfocusedBorderColor = secondary_color,
-                            textColor = MaterialTheme.colorScheme.primary,
-                        ),
-
-                        value = text,
-                        onValueChange = {newText ->
-                        text = newText
-                        },
-                        label = {
-                            Text(text = stringResource(id = R.string.note_label),
-                                color = text_color)
-                        },
-                        maxLines = 7,
-
-                    )
-                    note.note = text
-
-                    Button(onClick = {
-                        //navController.navigate(Screen.AddScreen.withArgs("aaa"))
-                    }, colors =  ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colorScheme.background,
-                        contentColor = MaterialTheme.colorScheme.primary)){
-                        androidx.compose.material.Text(text = "Add")
-                    }
-
-                }
-            }
 
         }
     }
-}
+
 
