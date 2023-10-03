@@ -70,7 +70,7 @@ fun AboutScreen(){
                     contentDescription = "Лого приложения",
                     modifier = Modifier
                         .size(250.dp)
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = 8.dp),
                 )
 
                 // Список преимуществ

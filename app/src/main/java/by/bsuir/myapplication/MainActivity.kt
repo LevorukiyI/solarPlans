@@ -42,9 +42,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController();
 
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
-
                 ) {
                     Scaffold(
                         bottomBar = {

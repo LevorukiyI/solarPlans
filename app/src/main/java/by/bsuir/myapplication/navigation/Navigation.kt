@@ -9,8 +9,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import by.bsuir.myapplication.screens.AboutScreen
 import by.bsuir.myapplication.screens.AddScreen
+import by.bsuir.myapplication.screens.HomeScreen
 import by.bsuir.myapplication.screens.MainScreen
 import by.bsuir.myapplication.screens.WeatherScreen
+import by.bsuir.myapplication.screens.WowScreen
 
 @Composable
 fun Navigation(navController: NavController){
@@ -19,23 +21,26 @@ fun Navigation(navController: NavController){
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            MainScreen(navController = navController)
+            HomeScreen(navController = navController)
         }
         composable(
-            route = Screen.AddScreen.route + "/{name}", arguments = listOf(
+            route = Screen.WowScreen.route + "/{name}", arguments = listOf(
                 navArgument("name") {
                     type = NavType.StringType
                     defaultValue = "Vova"
                     nullable = true
                 })
         ) { entry ->
-            AddScreen(name = entry.arguments?.getString("name"))
+            WowScreen(name = entry.arguments?.getString("name"))
         }
         composable(route = Screen.About.route) {
             AboutScreen()
         }
         composable(route = Screen.WeatherScreen.route) {
             WeatherScreen()
+        }
+        composable(route = Screen.AddScreen.route) {
+            AddScreen()
         }
     }
 }
