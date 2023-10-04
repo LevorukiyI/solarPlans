@@ -36,6 +36,7 @@ import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +60,7 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                     fontSize = 28.sp,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
-
+               // var error = remember { mutableStateOf(Random.nextBoolean()) }
                 var date by remember { mutableStateOf("") }
 
                 OutlinedTextField(
@@ -117,13 +118,13 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                 }
 
                 Button(onClick = {
-                    viewModel.onClickAddNote(goal, date)
-                    coroutineScope.launch {
-                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "New note added",
-                            actionLabel = "Ok"
-                        )
-                    }
+                        viewModel.onClickAddNote(goal, date)
+                        coroutineScope.launch {
+                            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "New note added",
+                                actionLabel = "Ok"
+                            )
+                        }
                     navController.navigate(Screen.MainScreen.route)
 
                 }, enabled = goal != "" && date != "" && date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
