@@ -35,7 +35,7 @@ class NoteViewModel(): ViewModel() {
     private companion object {
 
         private val DefaultNotes = listOf(
-            Notes("Make 3 PMIS labs", "10.10.2023", Weather(19, 12, "30", "3"))
+            Notes("Make 3 PMIS labs", "10102023", Weather(19, 12, "30", "3"))
         )
     }
 }
