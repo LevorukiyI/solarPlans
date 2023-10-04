@@ -26,6 +26,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import by.bsuir.myapplication.DateDefaults
+import by.bsuir.myapplication.MaskVisualTransformation
 import by.bsuir.myapplication.NoteViewModel
 import by.bsuir.myapplication.Notes
 import by.bsuir.myapplication.navigation.Screen
