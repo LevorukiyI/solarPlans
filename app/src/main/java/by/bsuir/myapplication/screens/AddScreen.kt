@@ -126,7 +126,7 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                     }
                     navController.navigate(Screen.MainScreen.route)
 
-                }, enabled = goal != "" && date != "",modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                }, enabled = goal != "" && date != "" && date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 

@@ -76,14 +76,14 @@ private fun HomeScreenContent(
         LazyColumn(modifier = Modifier.padding(bottom = 50.dp)){
 
             itemsIndexed(items = items) { index, note ->
-                NoteItem(note = note, onRemove = onRemove, navController = navController)
+                NoteItem(note = note, onRemove = onRemove, navController = navController, index = index)
             }
         }
     }
     else{
         Image(
             painter = painterResource(id = R.drawable.man),
-            contentDescription = "Лого приложения",
+            contentDescription = "",
             modifier = Modifier
                 .size(400.dp)
                 .padding(vertical = 8.dp),
@@ -97,7 +97,8 @@ private fun NoteItem(
     note: Notes,
     onRemove: (Notes) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    index: Int
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -127,7 +128,7 @@ private fun NoteItem(
                     fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = note.date,
+                    text = note.date.substring(0,2)+ "." + note.date.substring(2,4)+ "." + note.date.substring(4,8),
                     modifier = Modifier
                         .padding(vertical = 3.dp, horizontal = 5.dp),
                     textAlign = TextAlign.Center,
@@ -144,7 +145,7 @@ private fun NoteItem(
                 IconButton(
                     onClick =
                     {
-                        navController.navigate(Screen.AddScreen.route)
+                        navController.navigate(Screen.EditScreen.withArgs(index.toString()))
                     }
                 )
                 {

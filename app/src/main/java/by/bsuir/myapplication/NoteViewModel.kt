@@ -13,8 +13,8 @@ data class Weather(
 )
 
 data class Notes(
-    val goal: String,
-    val date: String,
+    var goal: String,
+    var date: String,
     val weather: Weather,
     val id: UUID = UUID.randomUUID()
 )
@@ -29,13 +29,20 @@ class NoteViewModel(): ViewModel() {
         items.add(newNote)
     }
 
-    fun onClickEditNote(goal: String, date: String, note: Notes){
+    fun onClickEditNote(goal: String, date: String, index : Int){
+        val note = items.get(index)
+        note.goal = goal
+        note.date = date
+    }
+
+    fun getItem(id: Int):Notes{
+        return items.get(id)
     }
 
     private companion object {
 
         private val DefaultNotes = listOf(
-            Notes("Make 3 PMIS labs", "10.10.2023", Weather(19, 12, "30", "3"))
+            Notes("Make 3 PMIS labs", "12102023", Weather(19, 12, "30", "3"))
         )
     }
 }
