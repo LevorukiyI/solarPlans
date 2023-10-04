@@ -21,12 +21,16 @@ import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.background_color
 import android.R
 import androidx.compose.foundation.background
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.coroutines.CoroutineScope
 
 
 class MainActivity : ComponentActivity() {
@@ -39,13 +43,16 @@ class MainActivity : ComponentActivity() {
 
            MyApplicationTheme {
 
-                val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
-                val navController = rememberNavController();
+               val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
+               val navController = rememberNavController()
+
+               val scaffoldState: ScaffoldState = rememberScaffoldState()
+               val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
                 Surface(
                     color = MaterialTheme.colorScheme.surface
                 ) {
-                    Scaffold(
+                    Scaffold(scaffoldState = scaffoldState,
                         bottomBar = {
                             BottomNavigation(backgroundColor = MaterialTheme.colorScheme.background) {
                                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -71,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }, backgroundColor = MaterialTheme.colorScheme.surface
                     ) {
-                        Navigation(navController = navController)
+                        Navigation(navController = navController, coroutineScope = coroutineScope, scaffoldState = scaffoldState)
                     }
                 }
             }

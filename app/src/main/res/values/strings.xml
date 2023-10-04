@@ -13,9 +13,11 @@
     <string name="date_label">Date</string>
     <string name="goal">Goal:</string>
     <string name="temperature">temperature: </string>
-    <string name="humidity">\humidity: </string>
-    <string name="raininess">\raininess: </string>
-    <string name="cloudCover">\cloudCover: </string>
+    <string name="humidity">|humidity: </string>
+    <string name="raininess">|raininess: </string>
+    <string name="cloudCover">|cloudCover: </string>
     <string name="addNoteString">Adding a new note</string>
     <string name="addNote">Add note</string>
+    <string name="newNoteAdded">New note added</string>
+    <string name="ok">Ok</string>
 </resources>

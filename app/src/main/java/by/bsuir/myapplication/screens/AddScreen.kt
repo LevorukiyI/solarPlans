@@ -4,11 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,14 +34,12 @@ import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Locale
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(navController: NavController,viewModel: NoteViewModel) {
+fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
 
     MaterialTheme {
         Box(
@@ -123,7 +118,12 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel) {
 
                 Button(onClick = {
                     viewModel.onClickAddNote(goal, date)
-
+                    coroutineScope.launch {
+                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                            message = "New note added",
+                            actionLabel = "Ok"
+                        )
+                    }
                     navController.navigate(Screen.MainScreen.route)
 
                 }, enabled = goal != "" && date != "",modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){

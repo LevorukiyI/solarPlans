@@ -30,15 +30,12 @@ class NoteViewModel(): ViewModel() {
     }
 
     fun onClickEditNote(goal: String, date: String, note: Notes){
-
     }
 
     private companion object {
 
         private val DefaultNotes = listOf(
-            Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пизда еще больше", "12.2.2023", Weather(19, 12, "20", "4")),
-
+            Notes("Make 3 PMIS labs", "10.10.2023", Weather(19, 12, "30", "3"))
         )
     }
 }
