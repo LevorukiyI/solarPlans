@@ -45,18 +45,18 @@ import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.vitaliybaranov.myapplication.R
 
 @Composable
-fun HomeScreen(navController: NavController){
-    val viewModel = viewModel<NoteViewModel>()
+fun HomeScreen(navController: NavController, viewModel: NoteViewModel){
+
     MaterialTheme {
         Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
                 Button(onClick = {
                     navController.navigate(Screen.AddScreen.route)
                 }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
-                    Text(text = "Add note", fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                    Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
             HomeScreenContent(
                 items = viewModel.items,
-                onAdd = { navController.navigate("add_screen") },
+                onEdit = {navController.navigate("add_screen")},
                 onRemove = viewModel::onClickRemoveNote,
                 navController = navController
             )
@@ -69,7 +69,7 @@ fun HomeScreen(navController: NavController){
 private fun HomeScreenContent(
     items: SnapshotStateList<Notes>,
     onRemove: (Notes) -> Unit,
-    onAdd: () -> Unit,
+    onEdit: () -> Unit,
     navController: NavController
 ) {
     if(items.size!=0){

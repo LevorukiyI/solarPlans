@@ -16,4 +16,6 @@
     <string name="humidity">\humidity: </string>
     <string name="raininess">\raininess: </string>
     <string name="cloudCover">\cloudCover: </string>
+    <string name="addNoteString">Adding a new note</string>
+    <string name="addNote">Add note</string>
 </resources>

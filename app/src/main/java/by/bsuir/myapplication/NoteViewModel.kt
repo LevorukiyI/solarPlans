@@ -24,17 +24,20 @@ class NoteViewModel(): ViewModel() {
 
     fun onClickRemoveNote(note: Notes) = items.remove(note)
 
+    fun onClickAddNote(goal: String, date: String){
+        val newNote =  Notes(goal, date, Weather(19, 12, "30", "3"))
+        items.add(newNote)
+    }
+
+    fun onClickEditNote(goal: String, date: String, note: Notes){
+
+    }
+
     private companion object {
 
         private val DefaultNotes = listOf(
             Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
             Notes("Пизда еще больше", "12.2.2023", Weather(19, 12, "20", "4")),
-            Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пиздsddd sd sd sd sdddd sd sd sd dsdsdd sd sd dd fdа", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пизда", "12.2.2023", Weather(19, 12, "30", "3")),
-            Notes("Пиздаa", "12.2.2023", Weather(19, 12, "30", "3")),
 
         )
     }

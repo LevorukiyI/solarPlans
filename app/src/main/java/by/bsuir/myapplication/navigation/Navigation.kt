@@ -1,12 +1,14 @@
 package by.bsuir.myapplication.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import by.bsuir.myapplication.NoteViewModel
 import by.bsuir.myapplication.screens.AboutScreen
 import by.bsuir.myapplication.screens.AddScreen
 import by.bsuir.myapplication.screens.HomeScreen
@@ -16,12 +18,13 @@ import by.bsuir.myapplication.screens.WowScreen
 
 @Composable
 fun Navigation(navController: NavController){
+    val viewModel = viewModel<NoteViewModel>()
     NavHost(
         navController = navController as NavHostController,
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel = viewModel)
         }
         composable(
             route = Screen.WowScreen.route + "/{name}", arguments = listOf(
@@ -40,7 +43,7 @@ fun Navigation(navController: NavController){
             WeatherScreen()
         }
         composable(route = Screen.AddScreen.route) {
-            AddScreen()
+            AddScreen(navController = navController,viewModel = viewModel)
         }
     }
 }
