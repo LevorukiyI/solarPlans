@@ -111,8 +111,10 @@ fun AboutScreen(){
 
                     val ctx = LocalContext.current
 
-                    val url_vk = "https://vk.com"
-                    val url_git = "https://github.com"
+
+                    //#TODO change links
+                    val url_vk = "https://vk.com/oleg24031974"
+                    val url_git = "https://github.com/LevorukiyI"
                     val url_tel = "https://t.me"
                     IconButton(
                         onClick =

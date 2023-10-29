@@ -60,7 +60,7 @@ class MainActivity : ComponentActivity() {
 
                                 bottomItems.forEach { screen ->
                                     BottomNavigationItem(
-                                        selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,
+                                        selected = currentDestination?.hierarchy?.any{it.route == screen.route} == true,//это писал индус
                                         onClick = {
                                             navController.navigate(screen.route) {
                                             popUpTo(navController.graph.findStartDestination().id){
