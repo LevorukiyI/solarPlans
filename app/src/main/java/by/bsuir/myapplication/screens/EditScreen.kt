@@ -36,7 +36,6 @@ import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,8 +61,6 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                 )
 
                 var date by remember { mutableStateOf(note!!.date) }
-
-
 
                 OutlinedTextField(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -121,19 +118,16 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
 
                 Button(onClick = {
 
-                        if (id != null) {
-                            viewModel.onClickEditNote(goal, date, index = id.toInt())
-                        }
-                        coroutineScope.launch {
-                            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                                message = "Note changed",
-                                actionLabel = "Ok"
-                            )
-                        }
-                        navController.navigate(Screen.MainScreen.route)
-
-
-
+                    if (id != null) {
+                        viewModel.onClickEditNote(goal, date, index = id.toInt())
+                    }
+                    coroutineScope.launch {
+                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                            message = "Note changed",
+                            actionLabel = "Ok"
+                        )
+                    }
+                    navController.navigate(Screen.MainScreen.route)
 
                 }, enabled = goal != "" && date != "" && date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.edit), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
