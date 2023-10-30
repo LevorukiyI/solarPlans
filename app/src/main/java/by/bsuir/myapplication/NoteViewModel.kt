@@ -5,20 +5,6 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import java.util.UUID
 
-data class Weather(
-    val temperature: Int,
-    val humidity: Int,
-    val raininess: String,
-    val  cloudCover: String
-)
-
-data class Notes(
-    var goal: String,
-    var date: String,
-    val weather: Weather,
-    val id: UUID = UUID.randomUUID()
-)
-
 class NoteViewModel(): ViewModel() {
     val items: SnapshotStateList<Notes> = DefaultNotes.toMutableStateList()
 
