@@ -26,7 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import by.bsuir.myapplication.AddEditViewModel
 import by.bsuir.myapplication.DateDefaults
 import by.bsuir.myapplication.MaskVisualTransformation
 import by.bsuir.myapplication.NoteViewModel
@@ -39,8 +42,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
-
+fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
+    val viewModel: AddEditViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    viewModel.initViewModel(null)
     MaterialTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -60,8 +65,6 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
 
-                var date by remember { mutableStateOf("") }
-
                 OutlinedTextField(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         //containerColor = Color.White,
@@ -69,10 +72,10 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                         unfocusedBorderColor = secondary_color,
                         textColor = MaterialTheme.colorScheme.primary,
                     ),
-                    value = date,
+                    value = uiState.date,
                     onValueChange = {newText ->
                         if (newText.length <= DateDefaults.DATE_LENGTH) {
-                            date = newText
+                            viewModel.setNoteDate(newText)
                         }
                     },
                     visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
@@ -85,11 +88,6 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
-
-                var goal by remember {
-                    mutableStateOf("")
-                }
-
                 OutlinedTextField(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         //containerColor = Color.White,
@@ -98,9 +96,9 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                         textColor = MaterialTheme.colorScheme.primary,
                     ),
 
-                    value = goal,
+                    value = uiState.goal,
                     onValueChange = { newText ->
-                        goal = newText
+                        viewModel.setNoteGoal(newText)
                     },
                     label = {
                         androidx.compose.material3.Text(
@@ -112,12 +110,8 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
 
                     )
 
-                val list = remember {
-                    mutableStateListOf<String>()
-                }
-
                 Button(onClick = {
-                    viewModel.onClickAddNote(goal, date)
+                    viewModel.saveNote()
                     coroutineScope.launch {
                         val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
                             message = "New note added",
@@ -126,7 +120,7 @@ fun AddScreen(navController: NavController,viewModel: NoteViewModel, coroutineSc
                     }
                     navController.navigate(Screen.MainScreen.route)
 
-                }, enabled = goal != "" && date != "" && date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                }, enabled = uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 

@@ -22,4 +22,5 @@
     <string name="ok">Ok</string>
     <string name="edit">Edit</string>
     <string name="editNote">Changing data</string>
+    <string name="delete">Delete</string>
 </resources>

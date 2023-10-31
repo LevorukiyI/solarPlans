@@ -26,7 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import by.bsuir.myapplication.AddEditViewModel
 import by.bsuir.myapplication.DateDefaults
 import by.bsuir.myapplication.MaskVisualTransformation
 import by.bsuir.myapplication.NoteViewModel
@@ -39,8 +42,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewModel, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState){
-    val note = id?.let { viewModel.getItem(it.toInt()) }
+fun EditScreen(id: String?, navController: NavController, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState){
+    val viewModel: AddEditViewModel = viewModel()
+    viewModel.initViewModel(id)
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     MaterialTheme {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -60,8 +65,6 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
 
-                var date by remember { mutableStateOf(note!!.date) }
-
                 OutlinedTextField(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         //containerColor = Color.White,
@@ -69,10 +72,10 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                         unfocusedBorderColor = secondary_color,
                         textColor = MaterialTheme.colorScheme.primary,
                     ),
-                    value = date,
+                    value = uiState.date,
                     onValueChange = {newText ->
                         if (newText.length <= DateDefaults.DATE_LENGTH) {
-                            date = newText
+                            viewModel.setNoteDate(newText)
                         }
                     },
                     visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
@@ -85,11 +88,6 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
-
-                var goal by remember {
-                    mutableStateOf(note!!.goal)
-                }
-
                 OutlinedTextField(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         //containerColor = Color.White,
@@ -98,9 +96,9 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                         textColor = MaterialTheme.colorScheme.primary,
                     ),
 
-                    value = goal,
+                    value = uiState.goal,
                     onValueChange = { newText ->
-                        goal = newText
+                        viewModel.setNoteGoal(newText)
                     },
                     label = {
                         androidx.compose.material3.Text(
@@ -119,7 +117,7 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                 Button(onClick = {
 
                     if (id != null) {
-                        viewModel.onClickEditNote(goal, date, index = id.toInt())
+                        viewModel.saveNote()
                     }
                     coroutineScope.launch {
                         val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
@@ -129,9 +127,27 @@ fun EditScreen(id: String?, navController: NavController, viewModel: NoteViewMod
                     }
                     navController.navigate(Screen.MainScreen.route)
 
-                }, enabled = goal != "" && date != "" && date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                }, enabled = uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.edit), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
+
+                Button(onClick = {
+                    if (id != null) {
+                        viewModel.deleteNote()
+                    }
+                    coroutineScope.launch {
+                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                            message = "Note deleted",
+                            actionLabel = "Ok"
+                        )
+                    }
+                    navController.navigate(Screen.MainScreen.route)
+
+                }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                    Text(text = stringResource(id = R.string.delete), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                }
+
+
 
             }
         }

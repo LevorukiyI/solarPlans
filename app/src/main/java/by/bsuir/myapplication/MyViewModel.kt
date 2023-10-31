@@ -122,22 +122,30 @@ data class NoteUiState(
 )
 
 
-class EditViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
+class AddEditViewModel() : ViewModel() {
 
     private val repository: NotesRepository = NotesRepositoryImpl
 
-    private var noteId: String? = savedStateHandle["id"]
+    private var noteId: String? = null
 
     private val _uiState = MutableStateFlow(NoteUiState())
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
-    init {
+    init{
+       // if (noteId != null) {
+        //    loadArticle(UUID.fromString(noteId))
+        //}
+    }
+
+    fun initViewModel(id: String?){
+        if(id!=null)
+            noteId = id.toString()
         if (noteId != null) {
-            loadArticle(UUID.fromString(noteId))
+            loadNote(UUID.fromString(noteId))
         }
     }
 
-    private fun loadArticle(noteId: UUID?) {
+    private fun loadNote(noteId: UUID?) {
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -159,7 +167,7 @@ class EditViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     }
 
 
-    fun saveArticle() {
+    fun saveNote() {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isNoteSaving = true) }
@@ -168,7 +176,7 @@ class EditViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
                         Notes(
                             id = UUID.fromString(noteId),
                             goal = _uiState.value.goal,
-                            date = _uiState.value.goal,
+                            date = _uiState.value.date,
                             weather = _uiState.value.weather
                         )
                     )
@@ -176,7 +184,7 @@ class EditViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
                     repository.upsert(
                         Notes(
                             goal = _uiState.value.goal,
-                            date = _uiState.value.goal,
+                            date = _uiState.value.date,
                             weather = _uiState.value.weather
                         )
                     )
@@ -264,10 +272,10 @@ class HomeViewModel : ViewModel() {
 
     private fun addLoadingElement() = notesLoadingItems.getAndUpdate { num -> num + 1 }
     private fun removeLoadingElement() = notesLoadingItems.getAndUpdate { num -> num - 1 }
-    fun deleteNote(articleId: UUID){
+    fun deleteNote(noteId: UUID){
         viewModelScope.launch {
 
-            withLoading { repository.delete(articleId) }
+            withLoading { repository.delete(noteId) }
         }
     }
 

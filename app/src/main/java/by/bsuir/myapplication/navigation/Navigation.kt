@@ -26,7 +26,7 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(navController = navController)
         }
         composable(
             route = Screen.WowScreen.route + "/{name}", arguments = listOf(
@@ -45,7 +45,7 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
             WeatherScreen()
         }
         composable(route = Screen.AddScreen.route) {
-            AddScreen(navController = navController,viewModel = viewModel, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
+            AddScreen(navController = navController, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
         }
         composable(
             route = Screen.EditScreen.route + "/{name}", arguments = listOf(
@@ -55,7 +55,7 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
                     nullable = true
                 })
         ) { entry ->
-            EditScreen(id = entry.arguments?.getString("name"),navController = navController,viewModel = viewModel, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
+            EditScreen(id = entry.arguments?.getString("name"),navController = navController, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
         }
     }
 }
