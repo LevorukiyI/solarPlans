@@ -9,7 +9,8 @@ data class Weather(
     val temperature: Int,
     val humidity: Int,
     val raininess: String,
-    val  cloudCover: String
+    val cloudCover: String
+
 )
 
 data class Notes(
