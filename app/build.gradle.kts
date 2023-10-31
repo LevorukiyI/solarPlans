@@ -76,7 +76,23 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
+    implementation("io.matthewnelson.kotlin-components:coroutines:1.1.5")
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
+
+//    implementation("io.ktor:ktor-server-core-jvm")
+//    implementation("io.ktor:ktor-server-auth-jvm")
+//    implementation("io.ktor:ktor-server-auth-jwt-jvm")
+//    implementation("io.ktor:ktor-server-call-logging-jvm")
+//    implementation("io.ktor:ktor-server-content-negotiation-jvm")
+//    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm")
+    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
+    implementation("com.h2database:h2:2.1.214")
+//    implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("ch.qos.logback:logback-classic:1.2.11")
+//    testImplementation("io.ktor:ktor-server-tests-jvm")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.2.11")
+    implementation("io.ktor:ktor:2.3.5")
 }
 
