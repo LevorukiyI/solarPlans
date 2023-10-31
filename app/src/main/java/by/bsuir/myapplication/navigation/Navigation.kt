@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import by.bsuir.myapplication.NoteViewModel
 import by.bsuir.myapplication.screens.AboutScreen
 import by.bsuir.myapplication.screens.AddScreen
+import by.bsuir.myapplication.screens.EditScreen
 import by.bsuir.myapplication.screens.HomeScreen
 import by.bsuir.myapplication.screens.WeatherScreen
 import by.bsuir.myapplication.screens.WowScreen
@@ -25,7 +26,7 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            HomeScreen(navController = navController, viewModel = viewModel)
+            HomeScreen(navController = navController)
         }
         composable(
             route = Screen.WowScreen.route + "/{name}", arguments = listOf(
@@ -44,7 +45,17 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
             WeatherScreen()
         }
         composable(route = Screen.AddScreen.route) {
-            AddScreen(navController = navController,viewModel = viewModel, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
+            AddScreen(navController = navController, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
+        }
+        composable(
+            route = Screen.EditScreen.route + "/{name}", arguments = listOf(
+                navArgument("name") {
+                    type = NavType.StringType
+                    defaultValue = "-1"
+                    nullable = true
+                })
+        ) { entry ->
+            EditScreen(id = entry.arguments?.getString("name"),navController = navController, scaffoldState = scaffoldState, coroutineScope = coroutineScope)
         }
     }
 }

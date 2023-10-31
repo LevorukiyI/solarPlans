@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -77,6 +78,6 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
 
     implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 }
 
