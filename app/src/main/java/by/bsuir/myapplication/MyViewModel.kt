@@ -41,6 +41,13 @@ interface NotesDataSource {
     suspend fun delete(id: UUID)
 }
 
+interface Mapper<T, R> {
+    fun toDTO(from: T): R
+    fun toEntity(from: R): T
+}
+
+object NotesMapper: Mapper<Notes, >
+
 object InMemoryNotesDataSource: NotesDataSource{
 
     private val DefaultNotes = listOf(
@@ -109,7 +116,7 @@ class NotesRepositoryImpl private constructor(private val database: MyDatabase) 
 //    override fun getNotes(): Flow<List<Notes>> {
 //        return dataSource.getNotes()
 //    }
-//
+//x
 //
 //    override fun getNote(id: UUID?): Flow<Notes?> {
 //
