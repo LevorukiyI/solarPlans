@@ -3,7 +3,8 @@ package by.bsuir.myapplication
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
-import java.util.UUID
+import by.bsuir.myapplication.database.entity.Notes
+import by.bsuir.myapplication.database.entity.Weather
 
 class NoteViewModel(): ViewModel() {
     val items: SnapshotStateList<Notes> = DefaultNotes.toMutableStateList()
@@ -21,7 +22,7 @@ class NoteViewModel(): ViewModel() {
         note.date = date
     }
 
-    fun getItem(id: Int):Notes{
+    fun getItem(id: Int): Notes {
         return items.get(id)
     }
 

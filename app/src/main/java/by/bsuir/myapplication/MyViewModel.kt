@@ -1,8 +1,15 @@
 package by.bsuir.myapplication
 
-import androidx.lifecycle.SavedStateHandle
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.OnConflictStrategy.Companion.REPLACE
+import by.bsuir.myapplication.database.entity.MyDatabase
+import by.bsuir.myapplication.database.entity.Notes
+import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -22,10 +29,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+@Dao
 interface NotesDataSource {
     fun getNotes(): Flow<List<Notes>>
+
+    @Query("SELECT * From notes Where 'id'=:id")
     fun getNote(id: UUID?): Flow<Notes?>
 
+    @Insert(onConflict = REPLACE)
     suspend fun upsert(note: Notes)
     suspend fun delete(id: UUID)
 }
@@ -35,9 +46,10 @@ object InMemoryNotesDataSource: NotesDataSource{
     private val DefaultNotes = listOf(
         Notes("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
         Notes("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Notes("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3")))
+        Notes("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3"))
+    )
 
-    private val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
+    val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
 
     private val _notesFlow = MutableSharedFlow<Map<UUID, Notes>>(1)
 
@@ -79,27 +91,38 @@ interface NotesRepository {
     suspend fun delete(id: UUID)
 }
 
-object NotesRepositoryImpl : NotesRepository {
+class NotesRepositoryImpl private constructor(private val database: MyDatabase) {
+    companion object{
+        private var INSTANCE: NotesRepositoryImpl? = null
 
-    private val dataSource: NotesDataSource = InMemoryNotesDataSource
-
-    override fun getNotes(): Flow<List<Notes>> {
-        return dataSource.getNotes()
+        fun get(context: Context): NotesRepositoryImpl{
+            if(INSTANCE == null){
+                INSTANCE = NotesRepositoryImpl(MyDatabase.get(context))
+            }
+            return INSTANCE as NotesRepositoryImpl
+        }
     }
 
-
-    override fun getNote(id: UUID?): Flow<Notes?> {
-
-        return dataSource.getNote(id)
-    }
-
-    override suspend fun upsert(note: Notes) {
-        dataSource.upsert(note)
-    }
-
-    override suspend fun delete(id: UUID) {
-        dataSource.delete(id)
-    }
+//
+//    private val dataSource: NotesDataSource = InMemoryNotesDataSource
+//
+//    override fun getNotes(): Flow<List<Notes>> {
+//        return dataSource.getNotes()
+//    }
+//
+//
+//    override fun getNote(id: UUID?): Flow<Notes?> {
+//
+//        return dataSource.getNote(id)
+//    }
+//
+//    override suspend fun upsert(note: Notes) {
+//        dataSource.upsert(note)
+//    }
+//
+//    override suspend fun delete(id: UUID) {
+//        dataSource.delete(id)
+//    }
 }
 
 data class NotesListUiState(
