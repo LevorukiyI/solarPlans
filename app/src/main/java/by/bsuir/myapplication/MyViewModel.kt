@@ -3,6 +3,7 @@ package by.bsuir.myapplication
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
 import by.bsuir.myapplication.database.entity.NoteEntity
@@ -21,14 +22,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
-
-
-
+import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 
 //object NotesMapper: Mapper<Notes, >
@@ -255,7 +255,7 @@ class AddEditViewModel() : ViewModel() {
 
 class HomeViewModel : ViewModel() {
 
-    private val repository: NotesRepository = NotesRepositoryImpl
+    private val repository: DatabaseRepository = DatabaseRepository.get(context)
     private val notes = repository.getNotes()
 
     private val notesLoadingItems = MutableStateFlow(0)
