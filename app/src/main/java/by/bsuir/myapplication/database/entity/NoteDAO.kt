@@ -9,12 +9,16 @@ import java.util.UUID
 
 @Dao
 interface NotesDataSource {
-    fun getNotes(): Flow<List<Note>>
+    @Query("SELECT * From notes")
+    fun getNotes(): List<Note>
 
     @Query("SELECT * From notes Where 'id'=:id")
     fun getNote(id: UUID?): Note?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(note: NoteEntity)
+
+    @Query("DELETE From notes Where 'id'=:id")
     suspend fun delete(id: UUID)
 }
+

@@ -1,13 +1,9 @@
 package by.bsuir.myapplication
 
-import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import by.bsuir.myapplication.database.entity.DatabaseRepository
-import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
-import by.bsuir.myapplication.database.entity.NoteEntity
-import by.bsuir.myapplication.database.entity.NotesDataSource
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -22,26 +18,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
-import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
+interface NotesDataSource {
+    fun getNotes(): Flow<List<Note>>
+    fun getNote(id: UUID?): Flow<Note?>
 
-//object NotesMapper: Mapper<Notes, >
+    suspend fun upsert(note: Note)
+    suspend fun delete(id: UUID)
+}
 
-object InMemoryNotesDataSource: NotesDataSource {
+object InMemoryNotesDataSource: NotesDataSource{
 
     private val DefaultNotes = listOf(
         Note("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
         Note("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3"))
-    )
+        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3")))
 
-    val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
+    private val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
 
     private val _notesFlow = MutableSharedFlow<Map<UUID, Note>>(1)
 
@@ -66,7 +64,7 @@ object InMemoryNotesDataSource: NotesDataSource {
         return _notesFlow.asSharedFlow().map { it[id] }
     }
 
-    override suspend fun upsert(note: NoteEntity) {
+    override suspend fun upsert(note: Note) {
         notes[note.id] = note
     }
 
@@ -83,38 +81,27 @@ interface NotesRepository {
     suspend fun delete(id: UUID)
 }
 
-class NotesRepositoryImpl private constructor(private val database: MyDatabase) {
-    companion object{
-        private var INSTANCE: NotesRepositoryImpl? = null
+object NotesRepositoryImpl : NotesRepository {
 
-        fun get(context: Context): NotesRepositoryImpl{
-            if(INSTANCE == null){
-                INSTANCE = NotesRepositoryImpl(MyDatabase.get(context))
-            }
-            return INSTANCE as NotesRepositoryImpl
-        }
+    private val dataSource: NotesDataSource = InMemoryNotesDataSource
+
+    override fun getNotes(): Flow<List<Note>> {
+        return dataSource.getNotes()
     }
 
-//
-//    private val dataSource: NotesDataSource = InMemoryNotesDataSource
-//
-//    override fun getNotes(): Flow<List<Notes>> {
-//        return dataSource.getNotes()
-//    }
-//x
-//
-//    override fun getNote(id: UUID?): Flow<Notes?> {
-//
-//        return dataSource.getNote(id)
-//    }
-//
-//    override suspend fun upsert(note: Notes) {
-//        dataSource.upsert(note)
-//    }
-//
-//    override suspend fun delete(id: UUID) {
-//        dataSource.delete(id)
-//    }
+
+    override fun getNote(id: UUID?): Flow<Note?> {
+
+        return dataSource.getNote(id)
+    }
+
+    override suspend fun upsert(note: Note) {
+        dataSource.upsert(note)
+    }
+
+    override suspend fun delete(id: UUID) {
+        dataSource.delete(id)
+    }
 }
 
 data class NotesListUiState(
@@ -147,7 +134,7 @@ class AddEditViewModel() : ViewModel() {
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
     init{
-       // if (noteId != null) {
+        // if (noteId != null) {
         //    loadArticle(UUID.fromString(noteId))
         //}
     }
@@ -253,9 +240,14 @@ class AddEditViewModel() : ViewModel() {
     }
 }
 
+
+
+
+
+
 class HomeViewModel : ViewModel() {
 
-    private val repository: DatabaseRepository = DatabaseRepository.get(context)
+    private val repository: NotesRepository = NotesRepositoryImpl
     private val notes = repository.getNotes()
 
     private val notesLoadingItems = MutableStateFlow(0)
