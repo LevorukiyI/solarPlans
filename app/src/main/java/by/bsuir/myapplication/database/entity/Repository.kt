@@ -19,5 +19,6 @@ class DatabaseRepository private constructor(private val database: MyDatabase) {
     suspend fun saveNote(note: Note) =
         database.notesDAO().upsert(NotesMapper.toEntity(note))
 
-    suspend fun getById(id: UUID) = database.notesDAO().getNote(id)?.let { NotesMapper.toDTO(it) }
+    //suspend fun getNote(id: UUID) = database.notesDAO().getNote(id)?.let { NotesMapper.toDTO(it) }
+    suspend fun getNote(id: UUID) = database.notesDAO().getNote(id)?.let { note -> NotesMapper.toDTO(note) }
 }

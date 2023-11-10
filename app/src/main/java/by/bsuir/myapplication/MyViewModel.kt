@@ -3,12 +3,9 @@ package by.bsuir.myapplication
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.OnConflictStrategy.Companion.REPLACE
 import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
+import by.bsuir.myapplication.database.entity.NoteEntity
 import by.bsuir.myapplication.database.entity.NotesDataSource
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +66,7 @@ object InMemoryNotesDataSource: NotesDataSource {
         return _notesFlow.asSharedFlow().map { it[id] }
     }
 
-    override suspend fun upsert(note: Note) {
+    override suspend fun upsert(note: NoteEntity) {
         notes[note.id] = note
     }
 

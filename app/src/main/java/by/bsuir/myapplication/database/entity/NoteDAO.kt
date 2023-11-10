@@ -12,9 +12,9 @@ interface NotesDataSource {
     fun getNotes(): Flow<List<Note>>
 
     @Query("SELECT * From notes Where 'id'=:id")
-    fun getNote(id: UUID?): Flow<Note?>
+    fun getNote(id: UUID?): Note?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(note: Note)
+    suspend fun upsert(note: NoteEntity)
     suspend fun delete(id: UUID)
 }
