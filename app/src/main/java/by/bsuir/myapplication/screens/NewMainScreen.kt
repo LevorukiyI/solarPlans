@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import by.bsuir.myapplication.database.entity.Notes
+import by.bsuir.myapplication.database.entity.Note
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.vitaliybaranov.myapplication.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -64,9 +64,9 @@ fun HomeScreen(navController: NavController){
 
 @Composable
 private fun HomeScreenContent(
-    items: List<Notes>,
-    onRemove: (Notes) -> Unit,
-    onEdit: (Notes) -> Unit,
+    items: List<Note>,
+    onRemove: (Note) -> Unit,
+    onEdit: (Note) -> Unit,
     navController: NavController
 ) {
     if(items.size!=0){
@@ -91,9 +91,9 @@ private fun HomeScreenContent(
 
 @Composable
 private fun NoteItem(
-    note: Notes,
-    onRemove: (Notes) -> Unit,
-    onEdit: (Notes) -> Unit,
+    note: Note,
+    onRemove: (Note) -> Unit,
+    onEdit: (Note) -> Unit,
     modifier: Modifier = Modifier,
     navController: NavController,
     index: Int
