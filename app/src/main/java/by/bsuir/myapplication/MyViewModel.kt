@@ -8,7 +8,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import by.bsuir.myapplication.database.entity.MyDatabase
-import by.bsuir.myapplication.database.entity.Notes
+import by.bsuir.myapplication.database.entity.Note
+import by.bsuir.myapplication.database.entity.NotesDataSource
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,38 +30,25 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@Dao
-interface NotesDataSource {
-    fun getNotes(): Flow<List<Notes>>
 
-    @Query("SELECT * From notes Where 'id'=:id")
-    fun getNote(id: UUID?): Flow<Notes?>
 
-    @Insert(onConflict = REPLACE)
-    suspend fun upsert(note: Notes)
-    suspend fun delete(id: UUID)
-}
 
-interface Mapper<T, R> {
-    fun toDTO(from: T): R
-    fun toEntity(from: R): T
-}
 
-object NotesMapper: Mapper<Notes, >
+//object NotesMapper: Mapper<Notes, >
 
-object InMemoryNotesDataSource: NotesDataSource{
+object InMemoryNotesDataSource: NotesDataSource {
 
     private val DefaultNotes = listOf(
-        Notes("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Notes("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Notes("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3"))
+        Note("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
+        Note("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
+        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3"))
     )
 
     val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
 
-    private val _notesFlow = MutableSharedFlow<Map<UUID, Notes>>(1)
+    private val _notesFlow = MutableSharedFlow<Map<UUID, Note>>(1)
 
-    override fun getNotes(): Flow<List<Notes>> {
+    override fun getNotes(): Flow<List<Note>> {
         GlobalScope.launch(Dispatchers.Default) {
             while (true) {
                 _notesFlow.emit(notes)
@@ -70,7 +58,7 @@ object InMemoryNotesDataSource: NotesDataSource{
         return _notesFlow.asSharedFlow().map { it.values.toList() }
     }
 
-    override fun getNote(id: UUID?): Flow<Notes?> {
+    override fun getNote(id: UUID?): Flow<Note?> {
         GlobalScope.launch(Dispatchers.Default) {
             while (true) {
                 _notesFlow.emit(notes)
@@ -81,7 +69,7 @@ object InMemoryNotesDataSource: NotesDataSource{
         return _notesFlow.asSharedFlow().map { it[id] }
     }
 
-    override suspend fun upsert(note: Notes) {
+    override suspend fun upsert(note: Note) {
         notes[note.id] = note
     }
 
@@ -91,10 +79,10 @@ object InMemoryNotesDataSource: NotesDataSource{
 }
 
 interface NotesRepository {
-    fun getNotes(): Flow<List<Notes>>
-    fun getNote(id: UUID?): Flow<Notes?>
+    fun getNotes(): Flow<List<Note>>
+    fun getNote(id: UUID?): Flow<Note?>
 
-    suspend fun upsert(note: Notes)
+    suspend fun upsert(note: Note)
     suspend fun delete(id: UUID)
 }
 
@@ -133,7 +121,7 @@ class NotesRepositoryImpl private constructor(private val database: MyDatabase) 
 }
 
 data class NotesListUiState(
-    val notes: List<Notes> = emptyList(),
+    val notes: List<Note> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false
 )
@@ -203,7 +191,7 @@ class AddEditViewModel() : ViewModel() {
                 _uiState.update { it.copy(isNoteSaving = true) }
                 if (noteId != null) {
                     repository.upsert(
-                        Notes(
+                        Note(
                             id = UUID.fromString(noteId),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
@@ -212,7 +200,7 @@ class AddEditViewModel() : ViewModel() {
                     )
                 } else {
                     repository.upsert(
-                        Notes(
+                        Note(
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
                             weather = _uiState.value.weather

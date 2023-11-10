@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity(tableName = "Weather")
-data class Weather(
+data class WeatherEntity(
     val temperature: Int,
     val humidity: Int,
     val raininess: String,
@@ -14,7 +14,7 @@ data class Weather(
 )
 
 @Entity(tableName = "notes")
-data class Notes(
+data class NoteEntity(
     var goal: String,
     var date: String,
     val weather: Weather,
