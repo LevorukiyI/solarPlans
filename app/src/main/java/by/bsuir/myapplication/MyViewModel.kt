@@ -154,7 +154,6 @@ data class NoteUiState(
 class AddEditViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: DatabaseRepository
-    val notes: Flow<List<Note>>
 
     private var noteId: String? = null
 
@@ -164,8 +163,6 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
     init{
         val noteDB = MyDatabase.get(application).notesDAO()
         repository = DatabaseRepository(noteDB)
-        notes = repository.getNotes()
-
     }
 
     fun initViewModel(id: String?){
@@ -271,16 +268,15 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DatabaseRepository
+    private val repository: DatabaseRepository = DatabaseRepository(MyDatabase.get(application).notesDAO())
     private val notes = repository.getNotes()
-
     private val notesLoadingItems = MutableStateFlow(0)
+
     val uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
         NotesListUiState(
             notes = notes.toList(),
             isLoading = loadingItems > 0,
             isError = false
-
         )
 
     }.stateIn(

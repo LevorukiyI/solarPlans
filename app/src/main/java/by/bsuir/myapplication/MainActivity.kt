@@ -20,6 +20,7 @@ import by.bsuir.myapplication.navigation.Navigation
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.background_color
 import android.R
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -40,9 +41,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
            MyApplicationTheme {
-
                val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
                val navController = rememberNavController()
 
