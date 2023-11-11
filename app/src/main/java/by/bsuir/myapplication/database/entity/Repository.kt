@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.map
 
 class DatabaseRepository private constructor(private val database: MyDatabase) {
 
+
     companion object {
         private var INSTANCE: DatabaseRepository? = null
 
@@ -17,6 +18,8 @@ class DatabaseRepository private constructor(private val database: MyDatabase) {
             return INSTANCE as DatabaseRepository
         }
     }
+
+    val allNotes: Flow<List<Note>> = database.notesDAO().getNotes()
 
     fun getNotes(): Flow<List<Note>> =
         database.notesDAO().getNotes()

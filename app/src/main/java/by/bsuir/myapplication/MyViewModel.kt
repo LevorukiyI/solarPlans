@@ -1,12 +1,17 @@
 package by.bsuir.myapplication
 
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.Mapper
+import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
 import by.bsuir.myapplication.database.entity.NoteEntity
 import by.bsuir.myapplication.database.entity.NotesDataSourceDAO
+import by.bsuir.myapplication.database.entity.NotesMapper
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,7 +26,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -36,7 +40,7 @@ interface NotesDataSource {
     suspend fun delete(id: UUID)
 }
 
-class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val mapper: Mapper<NoteEntity, Note>) : NotesDataSource {
+class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val mapper: Mapper<NoteEntity, Note>) : NotesDataSourceDAO {
     override fun getNotes(): Flow<List<Note>> {
         return notesDAO.getNotes().map { list -> list.map { mapper.toDTO(it) } }
     }
@@ -45,7 +49,11 @@ class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val 
         return notesDAO.getNote(id).map { it?.let { mapper.toDTO(it) } }
     }
 
-    override suspend fun upsert(note: Note) {
+    override suspend fun upsert(note: NoteEntity) {
+        notesDAO.upsert(note)
+    }
+
+    suspend fun upsert(note: Note) {
         notesDAO.upsert(mapper.toEntity(note))
     }
 
@@ -146,9 +154,9 @@ data class NoteUiState(
 )
 
 
-class AddEditViewModel() : ViewModel() {
+class AddEditViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DatabaseRepository = DatabaseRepository.get(context = context)
+    private val repository: DatabaseRepository = DatabaseRepository.get(application)
 
     private var noteId: String? = null
 
@@ -156,9 +164,8 @@ class AddEditViewModel() : ViewModel() {
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
     init{
-        // if (noteId != null) {
-        //    loadArticle(UUID.fromString(noteId))
-        //}
+        val noteDB = MyDatabase.get(application).notesDAO()
+
     }
 
     fun initViewModel(id: String?){
@@ -262,9 +269,9 @@ class AddEditViewModel() : ViewModel() {
     }
 }
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: NotesRepository = NotesRepositoryImpl
+    private val repository: DatabaseRepository = DatabaseRepository.get(application)
     private val notes = repository.getNotes()
 
     private val notesLoadingItems = MutableStateFlow(0)
