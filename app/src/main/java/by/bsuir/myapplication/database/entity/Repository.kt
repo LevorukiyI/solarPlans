@@ -5,32 +5,20 @@ import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class DatabaseRepository private constructor(private val database: MyDatabase) {
+class DatabaseRepository(private val notesDAO: NotesDataSourceDAO) {
 
-
-    companion object {
-        private var INSTANCE: DatabaseRepository? = null
-
-        fun get(context: Context): DatabaseRepository {
-            if (INSTANCE == null) {
-                INSTANCE = DatabaseRepository(MyDatabase.get(context))
-            }
-            return INSTANCE as DatabaseRepository
-        }
-    }
-
-    val allNotes: Flow<List<Note>> = database.notesDAO().getNotes()
+    val allNotes: Flow<List<Note>> = notesDAO.getNotes()
 
     fun getNotes(): Flow<List<Note>> =
-        database.notesDAO().getNotes()
+        notesDAO.getNotes()
 
     fun getNote(id: UUID?): Flow<Note?> =
-        database.notesDAO().getNote(id).map { it?.let { NotesMapper.toDTO(it) } }
+        notesDAO.getNote(id).map { it?.let { NotesMapper.toDTO(it) } }
 
     suspend fun upsert(note: Note) =
-        database.notesDAO().upsert(NotesMapper.toEntity(note))
+        notesDAO.upsert(NotesMapper.toEntity(note))
 
     suspend fun delete(id: UUID) =
-        database.notesDAO().delete(id)
+        notesDAO.delete(id)
 
 }

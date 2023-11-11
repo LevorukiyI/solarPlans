@@ -1,9 +1,7 @@
 package by.bsuir.myapplication
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.Mapper
@@ -11,7 +9,6 @@ import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
 import by.bsuir.myapplication.database.entity.NoteEntity
 import by.bsuir.myapplication.database.entity.NotesDataSourceDAO
-import by.bsuir.myapplication.database.entity.NotesMapper
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -62,77 +59,77 @@ class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val 
     }
 }
 
-//object InMemoryNotesDataSource: NotesDataSource{
-//
-//    private val DefaultNotes = listOf(
-//        Note("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-//        Note("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-//        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3")))
-//
-//    private val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
-//
-//    private val _notesFlow = MutableSharedFlow<Map<UUID, Note>>(1)
-//
-//    override fun getNotes(): Flow<List<Note>> {
-//        GlobalScope.launch(Dispatchers.Default) {
-//            while (true) {
-//                _notesFlow.emit(notes)
-//                delay(5000L)
-//            }
-//        }
-//        return _notesFlow.asSharedFlow().map { it.values.toList() }
-//    }
-//
-//    override fun getNote(id: UUID?): Flow<Note?> {
-//        GlobalScope.launch(Dispatchers.Default) {
-//            while (true) {
-//                _notesFlow.emit(notes)
-//                delay(5000L)
-//            }
-//        }
-//
-//        return _notesFlow.asSharedFlow().map { it[id] }
-//    }
-//
-//    override suspend fun upsert(note: Note) {
-//        notes[note.id] = note
-//    }
-//
-//    override suspend fun delete(id: UUID) {
-//        notes.remove(id)
-//    }
-//}
-//
-//interface NotesRepository {
-//    fun getNotes(): Flow<List<Note>>
-//    fun getNote(id: UUID?): Flow<Note?>
-//
-//    suspend fun upsert(note: Note)
-//    suspend fun delete(id: UUID)
-//}
-//
-//object NotesRepositoryImpl : NotesRepository {
-//
-//    private val dataSource: NotesDataSource = InMemoryNotesDataSource
-//
-//    override fun getNotes(): Flow<List<Note>> {
-//        return dataSource.getNotes()
-//    }
-//
-//
-//    override fun getNote(id: UUID?): Flow<Note?> {
-//
-//        return dataSource.getNote(id)
-//    }
-//
-//    override suspend fun upsert(note: Note) {
-//        dataSource.upsert(note)
-//    }
-//
-//    override suspend fun delete(id: UUID) {
-//        dataSource.delete(id)
-//    }
-//}
+object InMemoryNotesDataSource: NotesDataSource{
+
+    private val DefaultNotes = listOf(
+        Note("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
+        Note("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
+        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3")))
+
+    private val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
+
+    private val _notesFlow = MutableSharedFlow<Map<UUID, Note>>(1)
+
+    override fun getNotes(): Flow<List<Note>> {
+        GlobalScope.launch(Dispatchers.Default) {
+            while (true) {
+                _notesFlow.emit(notes)
+                delay(5000L)
+            }
+        }
+        return _notesFlow.asSharedFlow().map { it.values.toList() }
+    }
+
+    override fun getNote(id: UUID?): Flow<Note?> {
+        GlobalScope.launch(Dispatchers.Default) {
+            while (true) {
+                _notesFlow.emit(notes)
+                delay(5000L)
+            }
+        }
+
+        return _notesFlow.asSharedFlow().map { it[id] }
+    }
+
+    override suspend fun upsert(note: Note) {
+        notes[note.id] = note
+    }
+
+    override suspend fun delete(id: UUID) {
+        notes.remove(id)
+    }
+}
+
+interface NotesRepository {
+    fun getNotes(): Flow<List<Note>>
+    fun getNote(id: UUID?): Flow<Note?>
+
+    suspend fun upsert(note: Note)
+    suspend fun delete(id: UUID)
+}
+
+object NotesRepositoryImpl : NotesRepository {
+
+    private val dataSource: NotesDataSource = InMemoryNotesDataSource
+
+    override fun getNotes(): Flow<List<Note>> {
+        return dataSource.getNotes()
+    }
+
+
+    override fun getNote(id: UUID?): Flow<Note?> {
+
+        return dataSource.getNote(id)
+    }
+
+    override suspend fun upsert(note: Note) {
+        dataSource.upsert(note)
+    }
+
+    override suspend fun delete(id: UUID) {
+        dataSource.delete(id)
+    }
+}
 
 data class NotesListUiState(
     val notes: List<Note> = emptyList(),
@@ -156,7 +153,8 @@ data class NoteUiState(
 
 class AddEditViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DatabaseRepository = DatabaseRepository.get(application)
+    private val repository: DatabaseRepository
+    val notes: Flow<List<Note>>
 
     private var noteId: String? = null
 
@@ -165,6 +163,8 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
 
     init{
         val noteDB = MyDatabase.get(application).notesDAO()
+        repository = DatabaseRepository(noteDB)
+        notes = repository.getNotes()
 
     }
 
@@ -271,7 +271,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DatabaseRepository = DatabaseRepository.get(application)
+    private val repository: DatabaseRepository
     private val notes = repository.getNotes()
 
     private val notesLoadingItems = MutableStateFlow(0)
