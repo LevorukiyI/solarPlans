@@ -27,6 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import by.bsuir.myapplication.database.entity.Note
@@ -35,13 +37,14 @@ import by.bsuir.vitaliybaranov.myapplication.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import by.bsuir.myapplication.HomeViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(navController: NavController){
     //the problem is there
     val viewModel: HomeViewModel = viewModel()
+    ////
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
 
     MaterialTheme {
         Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
