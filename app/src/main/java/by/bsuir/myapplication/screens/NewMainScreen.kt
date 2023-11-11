@@ -38,6 +38,7 @@ import by.bsuir.myapplication.HomeViewModel
 
 @Composable
 fun HomeScreen(navController: NavController){
+    //the problem is there
     val viewModel: HomeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
