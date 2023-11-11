@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
 @Dao
-interface NotesDataSource {
+interface NotesDataSourceDAO {
     @Query("SELECT * From notes")
-    fun getNotes(): List<Note>
+    fun getNotes(): Flow<List<Note>>
 
     @Query("SELECT * From notes Where 'id'=:id")
-    fun getNote(id: UUID?): Note?
+    fun getNote(id: UUID?): Flow<Note?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(note: NoteEntity)

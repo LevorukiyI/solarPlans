@@ -20,7 +20,7 @@ abstract class MyDatabase : RoomDatabase() {
         }
 
     }
-    abstract fun notesDAO(): NotesDataSource
+    abstract fun notesDAO(): NotesDataSourceDAO
 
 }
 

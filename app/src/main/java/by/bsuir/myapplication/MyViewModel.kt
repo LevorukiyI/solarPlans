@@ -1,9 +1,11 @@
 package by.bsuir.myapplication
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.bsuir.myapplication.database.entity.Mapper
 import by.bsuir.myapplication.database.entity.Note
+import by.bsuir.myapplication.database.entity.NoteEntity
+import by.bsuir.myapplication.database.entity.NotesDataSourceDAO
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -30,6 +32,24 @@ interface NotesDataSource {
 
     suspend fun upsert(note: Note)
     suspend fun delete(id: UUID)
+}
+
+class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val mapper: Mapper<NoteEntity, Note>) : NotesDataSource {
+    override fun getNotes(): Flow<List<Note>> {
+        return notesDAO.getNotes().map { list -> list.map { mapper.toDTO(it) } }
+    }
+
+    override fun getNote(id: UUID?): Flow<Note?> {
+        return notesDAO.getNote(id).map { it?.let { mapper.toDTO(it) } }
+    }
+
+    override suspend fun upsert(note: Note) {
+        notesDAO.upsert(mapper.toEntity(note))
+    }
+
+    override suspend fun delete(id: UUID) {
+        notesDAO.delete(id)
+    }
 }
 
 object InMemoryNotesDataSource: NotesDataSource{
