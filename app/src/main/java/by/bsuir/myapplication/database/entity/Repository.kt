@@ -1,6 +1,5 @@
 package by.bsuir.myapplication.database.entity
 
-import android.content.Context
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

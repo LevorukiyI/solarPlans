@@ -42,8 +42,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(navController: NavController){
     //the problem is there
-    val viewModel: HomeViewModel = viewModel()
-    ////
+    val viewModel: HomeViewModel = HomeViewModel(getApplicationContext())
+    //// necessary to add in mainfest (to make getApplicationContext() workable)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MaterialTheme {
