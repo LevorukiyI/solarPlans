@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import by.bsuir.myapplication.database.entity.Note
@@ -42,7 +43,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeScreen(navController: NavController){
     //the problem is there
-    val viewModel: HomeViewModel = HomeViewModel(getApplicationContext())
+    val viewModel: HomeViewModel = ViewModel()
     //// necessary to add in mainfest (to make getApplicationContext() workable)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

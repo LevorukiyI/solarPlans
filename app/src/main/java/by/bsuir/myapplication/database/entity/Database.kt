@@ -1,5 +1,6 @@
 package by.bsuir.myapplication.database.entity
 
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -14,7 +15,7 @@ abstract class MyDatabase : RoomDatabase() {
         fun get(context: Context): MyDatabase {
             if (INSTANCE == null) {
                 INSTANCE =
-                    Room.databaseBuilder(context, MyDatabase::class.java, "database").build()
+                    Room.databaseBuilder(context, MyDatabase::class.java, "database").fallbackToDestructiveMigration().build()
             }
             return INSTANCE as MyDatabase
         }

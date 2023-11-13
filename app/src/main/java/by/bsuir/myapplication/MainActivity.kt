@@ -31,15 +31,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import by.bsuir.myapplication.database.entity.appModule
+import by.bsuir.myapplication.database.entity.databaseModule
 import kotlinx.coroutines.CoroutineScope
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 
 class MainActivity : ComponentActivity() {
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
+        startKoin {
+            androidContext(applicationContext)
+            modules(appModule)
+        }
         super.onCreate(savedInstanceState)
-
         setContent {
            MyApplicationTheme {
                val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
