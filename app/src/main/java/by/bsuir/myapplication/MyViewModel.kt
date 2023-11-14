@@ -156,7 +156,7 @@ data class NoteUiState(
 )
 
 
-class AddEditViewModel(application: Application) : AndroidViewModel(application) {
+class AddEditViewModel : ViewModel() {
 
     private val notesDAO: NotesDataSourceDAO by KoinJavaComponent.inject(NotesDataSourceDAO::class.java)
 
