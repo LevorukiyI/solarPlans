@@ -2,6 +2,7 @@ package by.bsuir.myapplication
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.Mapper
@@ -9,6 +10,7 @@ import by.bsuir.myapplication.database.entity.MyDatabase
 import by.bsuir.myapplication.database.entity.Note
 import by.bsuir.myapplication.database.entity.NoteEntity
 import by.bsuir.myapplication.database.entity.NotesDataSourceDAO
+import by.bsuir.myapplication.database.entity.NotesMapper
 import by.bsuir.myapplication.database.entity.Weather
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -27,6 +29,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.java.KoinJavaComponent
+import org.koin.java.KoinJavaComponent.inject
 import java.util.UUID
 
 interface NotesDataSource {
@@ -153,7 +158,7 @@ data class NoteUiState(
 
 class AddEditViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: DatabaseRepository
+    private val notesDAO: NotesDataSourceDAO by KoinJavaComponent.inject(NotesDataSourceDAO::class.java)
 
     private var noteId: String? = null
 
@@ -161,8 +166,6 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
     init{
-        val noteDB = MyDatabase.get(application).notesDAO()
-        repository = DatabaseRepository(noteDB)
     }
 
     fun initViewModel(id: String?){
@@ -177,7 +180,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = repository.getNote(noteId).first()
+            val result = notesDAO.getNote(noteId).first()
             if (result == null) {
                 _uiState.update { it.copy(isLoading = false) }
             } else {
@@ -200,20 +203,23 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
             try {
                 _uiState.update { it.copy(isNoteSaving = true) }
                 if (noteId != null) {
-                    repository.upsert(
-                        Note(
+                    notesDAO.upsert(
+                        NotesMapper.toEntity(Note(
                             id = UUID.fromString(noteId),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
                             weather = _uiState.value.weather
-                        )
+                        ))
+
                     )
                 } else {
-                    repository.upsert(
+                    notesDAO.upsert(
+                        NotesMapper.toEntity(
                         Note(
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
                             weather = _uiState.value.weather
+                        )
                         )
                     )
                 }
@@ -236,7 +242,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
                 _uiState.update { it.copy(isNoteSaving = true) }
 
                 if(noteId!=null) {
-                    repository.delete(UUID.fromString(noteId))
+                    notesDAO.delete(UUID.fromString(noteId))
                 }
                 _uiState.update { it.copy(isNoteSaved = true) }
             }
@@ -266,10 +272,10 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
     }
 }
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel : ViewModel() {
 
-    private val repository: DatabaseRepository = DatabaseRepository(MyDatabase.get(application).notesDAO())
-    private val notes = repository.getNotes()
+    private val notesDAO: NotesDataSourceDAO by KoinJavaComponent.inject(NotesDataSourceDAO::class.java)
+    private val notes = notesDAO.getNotes()
     private val notesLoadingItems = MutableStateFlow(0)
 
     val uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
@@ -302,7 +308,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteNote(noteId: UUID){
         viewModelScope.launch {
 
-            withLoading { repository.delete(noteId) }
+            withLoading { notesDAO.delete(noteId) }
         }
     }
 

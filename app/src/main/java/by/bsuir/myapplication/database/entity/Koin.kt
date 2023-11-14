@@ -5,6 +5,7 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     single { MyDatabase.get(androidContext().applicationContext)  }
+    single { get<MyDatabase>().notesDAO() }
 }
 
 val appModule = module {
