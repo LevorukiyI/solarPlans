@@ -4,11 +4,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val databaseModule = module {
-    single { MyDatabase(get()) }
+    single { MyDatabase.get(androidContext().applicationContext)  }
 }
 
 val appModule = module {
     includes(databaseModule)
-    single { MyDatabase(get()) }
 }
 
