@@ -1,6 +1,7 @@
 package by.bsuir.myapplication.database.entity
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -19,7 +20,7 @@ interface NotesDataSourceDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(note: NoteEntity)
 
-    @Query("DELETE From $NOTE_TABLE Where 'id'=:id")
-    suspend fun delete(id: UUID)
+    @Delete
+    suspend fun delete(e: NoteEntity)
 }
 

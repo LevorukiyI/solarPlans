@@ -3,6 +3,7 @@ package by.bsuir.myapplication.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import by.bsuir.myapplication.database.entity.Constants.NOTE_TABLE
 import by.bsuir.myapplication.database.entity.Constants.WEATHER_TABLE
 import java.util.UUID
@@ -23,6 +24,7 @@ data class NoteEntity(
     @ColumnInfo(name = "date")
     var date: String,
     //val weather: Weather,
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     val id: UUID
 )

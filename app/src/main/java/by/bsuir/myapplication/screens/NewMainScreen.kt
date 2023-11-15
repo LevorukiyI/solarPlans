@@ -42,7 +42,6 @@ import org.koin.androidx.compose.koinViewModel
 fun HomeScreen(navController: NavController/*, viewModel: HomeViewModel*/){
     val viewModel = koinViewModel<HomeViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     MaterialTheme {
         Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
                 Button(onClick = {
@@ -54,7 +53,8 @@ fun HomeScreen(navController: NavController/*, viewModel: HomeViewModel*/){
                 items = uiState.notes,
                 onEdit = { it -> navController.navigate(Screen.EditScreen.withArgs(it.id.toString()))},
                 onRemove = {
-                           viewModel.deleteNote(it.id)
+                        uiState.notes = emptyList()
+                           viewModel.deleteNote(it)
                 },
                 navController = navController
             )

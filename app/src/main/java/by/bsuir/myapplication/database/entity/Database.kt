@@ -5,10 +5,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import by.bsuir.myapplication.database.entity.Constants.NOTE_DATABASE
 
 
-@Database(entities = [NoteEntity::class], version = 1)
+@Database(entities = [NoteEntity::class], version = 2)
+@TypeConverters(Converter::class)
 abstract class MyDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: MyDatabase? = null

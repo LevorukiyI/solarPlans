@@ -13,5 +13,5 @@ class DatabaseRepository(private val notesDAO: NotesDataSourceDAO) {
 
     fun getNote(id: UUID?) = notesDAO.getNote(id)
 
-    suspend fun delete(id:UUID) = notesDAO.delete(id)
+    suspend fun delete(e: NoteEntity) = notesDAO.delete(e)
 }

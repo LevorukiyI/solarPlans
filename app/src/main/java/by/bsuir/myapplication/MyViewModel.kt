@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -31,7 +32,7 @@ interface NotesDataSource {
     fun getNote(id: UUID?): Flow<Note?>
 
     suspend fun upsert(note: Note)
-    suspend fun delete(id: UUID)
+    suspend fun delete(e: Note)
 }
 
 class RoomNotesDataSource(private val repository: DatabaseRepository) : NotesDataSource {
@@ -47,13 +48,13 @@ class RoomNotesDataSource(private val repository: DatabaseRepository) : NotesDat
         repository.upsert(NotesMapper.toEntity(note))
     }
 
-    override suspend fun delete(id: UUID) {
-        repository.delete(id)
+    override suspend fun delete(e: Note) {
+        repository.delete(NotesMapper.toEntity(e))
     }
 }
 
 data class NotesListUiState(
-    val notes: List<Note> = emptyList(),
+    var notes: List<Note> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false
 )
@@ -154,7 +155,7 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
                 _uiState.update { it.copy(isNoteSaving = true) }
 
                 if(noteId!=null) {
-                    dataSource.delete(UUID.fromString(noteId))
+                   // dataSource.delete(UUID.fromString(noteId))
                 }
                 _uiState.update { it.copy(isNoteSaved = true) }
             }
@@ -183,10 +184,10 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 }
 
 class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
-    private val notes = dataSource.getNotes()
+    private var notes = dataSource.getNotes()
     private val notesLoadingItems = MutableStateFlow(0)
 
-    val uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
+    var uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
         NotesListUiState(
             notes = notes.toList(),
             isLoading = loadingItems > 0,
@@ -213,10 +214,10 @@ class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 
     private fun addLoadingElement() = notesLoadingItems.getAndUpdate { num -> num + 1 }
     private fun removeLoadingElement() = notesLoadingItems.getAndUpdate { num -> num - 1 }
-    fun deleteNote(noteId: UUID){
+    fun deleteNote(note: Note){
         viewModelScope.launch {
-
-            withLoading { dataSource.delete(noteId) }
+            withLoading { dataSource.delete(note)
+            }
         }
     }
 
