@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -32,18 +32,18 @@ import androidx.navigation.NavController
 import by.bsuir.myapplication.AddEditViewModel
 import by.bsuir.myapplication.DateDefaults
 import by.bsuir.myapplication.MaskVisualTransformation
-import by.bsuir.myapplication.NoteViewModel
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditScreen(id: String?, navController: NavController, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState){
-    val viewModel: AddEditViewModel = viewModel()
+    val viewModel = koinViewModel<AddEditViewModel>()
     viewModel.initViewModel(id)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     MaterialTheme {

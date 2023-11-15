@@ -7,18 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,19 +27,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import by.bsuir.myapplication.AddEditViewModel
 import by.bsuir.myapplication.DateDefaults
+import by.bsuir.myapplication.HomeViewModel
 import by.bsuir.myapplication.MaskVisualTransformation
-import by.bsuir.myapplication.NoteViewModel
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.myapplication.ui.theme.secondary_color
 import by.bsuir.myapplication.ui.theme.text_color
 import by.bsuir.vitaliybaranov.myapplication.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState) {
-    val viewModel: AddEditViewModel = viewModel()
+    val viewModel = koinViewModel<AddEditViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     viewModel.initViewModel(null)
     MaterialTheme {
@@ -80,7 +77,7 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                     },
                     visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
                     label = {
-                        androidx.compose.material3.Text(text = stringResource(id = R.string.date_label),
+                        Text(text = stringResource(id = R.string.date_label),
                             color = text_color
                         )
                     },
@@ -101,7 +98,7 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                         viewModel.setNoteGoal(newText)
                     },
                     label = {
-                        androidx.compose.material3.Text(
+                        Text(
                             text = stringResource(id = R.string.note_label),
                             color = text_color
                         )

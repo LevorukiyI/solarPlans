@@ -1,23 +1,17 @@
 package by.bsuir.myapplication.database.entity
 
+import by.bsuir.myapplication.Note
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class DatabaseRepository(private val notesDAO: NotesDataSourceDAO) {
 
-    val allNotes: Flow<List<Note>> = notesDAO.getNotes()
+    suspend fun upsert(noteEntity: NoteEntity) = notesDAO.upsert(noteEntity)
 
-    fun getNotes(): Flow<List<Note>> =
-        notesDAO.getNotes()
+    fun getNotes() = notesDAO.getNotes()
 
-    fun getNote(id: UUID?): Flow<Note?> =
-        notesDAO.getNote(id).map { it?.let { NotesMapper.toDTO(it) } }
+    fun getNote(id: UUID?) = notesDAO.getNote(id)
 
-    suspend fun upsert(note: Note) =
-        notesDAO.upsert(NotesMapper.toEntity(note))
-
-    suspend fun delete(id: UUID) =
-        notesDAO.delete(id)
-
+    suspend fun delete(id:UUID) = notesDAO.delete(id)
 }

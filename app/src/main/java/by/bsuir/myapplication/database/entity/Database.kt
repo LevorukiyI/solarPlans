@@ -5,9 +5,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import by.bsuir.myapplication.database.entity.Constants.NOTE_DATABASE
 
 
-@Database(entities = [Note::class], version = 1)
+@Database(entities = [NoteEntity::class], version = 1)
 abstract class MyDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: MyDatabase? = null
@@ -15,7 +16,7 @@ abstract class MyDatabase : RoomDatabase() {
         fun get(context: Context): MyDatabase {
             if (INSTANCE == null) {
                 INSTANCE =
-                    Room.databaseBuilder(context, MyDatabase::class.java, "database").fallbackToDestructiveMigration().build()
+                    Room.databaseBuilder(context, MyDatabase::class.java, NOTE_DATABASE).fallbackToDestructiveMigration().build()
             }
             return INSTANCE as MyDatabase
         }

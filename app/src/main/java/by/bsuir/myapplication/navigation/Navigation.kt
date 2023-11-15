@@ -2,14 +2,13 @@ package by.bsuir.myapplication.navigation
 
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import by.bsuir.myapplication.NoteViewModel
+import by.bsuir.myapplication.HomeViewModel
 import by.bsuir.myapplication.screens.AboutScreen
 import by.bsuir.myapplication.screens.AddScreen
 import by.bsuir.myapplication.screens.EditScreen
@@ -19,14 +18,13 @@ import by.bsuir.myapplication.screens.WowScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun Navigation(navController: NavController, scaffoldState: ScaffoldState, coroutineScope: CoroutineScope){
-    val viewModel = viewModel<NoteViewModel>()
+fun Navigation(navController: NavController, scaffoldState: ScaffoldState, coroutineScope: CoroutineScope/*, viewModel: HomeViewModel*/){
     NavHost(
         navController = navController as NavHostController,
         startDestination = Screen.MainScreen.route
     ) {
         composable(route = Screen.MainScreen.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController/*, viewModel*/)
         }
         composable(
             route = Screen.WowScreen.route + "/{name}", arguments = listOf(

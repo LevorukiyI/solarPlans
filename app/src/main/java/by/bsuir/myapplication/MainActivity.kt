@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import by.bsuir.myapplication.ui.theme.MyApplicationTheme
 import androidx.activity.compose.*
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
@@ -18,37 +17,37 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import by.bsuir.myapplication.navigation.Navigation
 import by.bsuir.myapplication.navigation.Screen
-import by.bsuir.myapplication.ui.theme.background_color
-import android.R
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import by.bsuir.myapplication.database.entity.appModule
 import by.bsuir.myapplication.database.entity.databaseModule
 import kotlinx.coroutines.CoroutineScope
+import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.GlobalContext.startKoin
+import org.koin.java.KoinJavaComponent
+import java.util.logging.Logger
 
 
 class MainActivity : ComponentActivity() {
-
+    private val logger : Logger by inject()
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
-        startKoin {
-            androidContext(applicationContext)
-            modules(appModule)
-        }
+        //logger.debug("onCreate")
         super.onCreate(savedInstanceState)
         setContent {
-           MyApplicationTheme {
+           // val viewModel: HomeViewModel by viewModel()
+            MyApplicationTheme {
                val bottomItems = listOf(Screen.MainScreen, Screen.WeatherScreen, Screen.About)
                val navController = rememberNavController()
 
@@ -84,22 +83,11 @@ class MainActivity : ComponentActivity() {
                             }
                         }, backgroundColor = MaterialTheme.colorScheme.surface
                     ) {
-                        Navigation(navController = navController, coroutineScope = coroutineScope, scaffoldState = scaffoldState)
+                        Navigation(navController = navController, coroutineScope = coroutineScope, scaffoldState = scaffoldState/*,viewModel = viewModel*/)
                     }
                 }
             }
         }
+
     }
-
-
-    private val permissionsToRequest = arrayOf(
-        Manifest.permission.INTERNET,
-        Manifest.permission.CHANGE_NETWORK_STATE,
-        Manifest.permission.CHANGE_WIFI_STATE,
-        Manifest.permission.POST_NOTIFICATIONS,
-        Manifest.permission.SCHEDULE_EXACT_ALARM,
-        Manifest.permission.FOREGROUND_SERVICE,
-        Manifest.permission.RECEIVE_BOOT_COMPLETED,
-        Manifest.permission.CAMERA,
-    )
 }

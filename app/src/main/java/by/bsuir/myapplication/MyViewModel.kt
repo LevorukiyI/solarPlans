@@ -1,26 +1,20 @@
 package by.bsuir.myapplication
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.Mapper
-import by.bsuir.myapplication.database.entity.MyDatabase
-import by.bsuir.myapplication.database.entity.Note
+
 import by.bsuir.myapplication.database.entity.NoteEntity
-import by.bsuir.myapplication.database.entity.NotesDataSourceDAO
 import by.bsuir.myapplication.database.entity.NotesMapper
-import by.bsuir.myapplication.database.entity.Weather
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
+
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -29,9 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.java.KoinJavaComponent
-import org.koin.java.KoinJavaComponent.inject
+
 import java.util.UUID
 
 interface NotesDataSource {
@@ -42,97 +34,21 @@ interface NotesDataSource {
     suspend fun delete(id: UUID)
 }
 
-class RoomNotesDataSource(private val notesDAO: NotesDataSourceDAO, private val mapper: Mapper<NoteEntity, Note>) : NotesDataSourceDAO {
+class RoomNotesDataSource(private val repository: DatabaseRepository) : NotesDataSource {
     override fun getNotes(): Flow<List<Note>> {
-        return notesDAO.getNotes().map { list -> list.map { mapper.toDTO(it) } }
+        return repository.getNotes().map {list -> list.map { NotesMapper.toDTO(it)}}
     }
 
     override fun getNote(id: UUID?): Flow<Note?> {
-        return notesDAO.getNote(id).map { it?.let { mapper.toDTO(it) } }
-    }
-
-    override suspend fun upsert(note: NoteEntity) {
-        notesDAO.upsert(note)
-    }
-
-    suspend fun upsert(note: Note) {
-        notesDAO.upsert(mapper.toEntity(note))
-    }
-
-    override suspend fun delete(id: UUID) {
-        notesDAO.delete(id)
-    }
-}
-
-object InMemoryNotesDataSource: NotesDataSource{
-
-    private val DefaultNotes = listOf(
-        Note("Make 3 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Note("Make 4 PMIS labs", "12112023", Weather(19, 12, "30", "3")),
-        Note("Make 5 PMIS labs", "12112023", Weather(19, 12, "30", "3")))
-
-    private val notes = DefaultNotes.associateBy { it.id }.toMutableMap()
-
-    private val _notesFlow = MutableSharedFlow<Map<UUID, Note>>(1)
-
-    override fun getNotes(): Flow<List<Note>> {
-        GlobalScope.launch(Dispatchers.Default) {
-            while (true) {
-                _notesFlow.emit(notes)
-                delay(5000L)
-            }
-        }
-        return _notesFlow.asSharedFlow().map { it.values.toList() }
-    }
-
-    override fun getNote(id: UUID?): Flow<Note?> {
-        GlobalScope.launch(Dispatchers.Default) {
-            while (true) {
-                _notesFlow.emit(notes)
-                delay(5000L)
-            }
-        }
-
-        return _notesFlow.asSharedFlow().map { it[id] }
+        return repository.getNote(id).map { it?.let { NotesMapper.toDTO(it) } }
     }
 
     override suspend fun upsert(note: Note) {
-        notes[note.id] = note
+        repository.upsert(NotesMapper.toEntity(note))
     }
 
     override suspend fun delete(id: UUID) {
-        notes.remove(id)
-    }
-}
-
-interface NotesRepository {
-    fun getNotes(): Flow<List<Note>>
-    fun getNote(id: UUID?): Flow<Note?>
-
-    suspend fun upsert(note: Note)
-    suspend fun delete(id: UUID)
-}
-
-object NotesRepositoryImpl : NotesRepository {
-
-    private val dataSource: NotesDataSource = InMemoryNotesDataSource
-
-    override fun getNotes(): Flow<List<Note>> {
-        return dataSource.getNotes()
-    }
-
-
-    override fun getNote(id: UUID?): Flow<Note?> {
-
-        return dataSource.getNote(id)
-    }
-
-    override suspend fun upsert(note: Note) {
-        dataSource.upsert(note)
-    }
-
-    override suspend fun delete(id: UUID) {
-        dataSource.delete(id)
+        repository.delete(id)
     }
 }
 
@@ -156,9 +72,7 @@ data class NoteUiState(
 )
 
 
-class AddEditViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val notesDAO: NotesDataSourceDAO by KoinJavaComponent.inject(NotesDataSourceDAO::class.java)
+class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 
     private var noteId: String? = null
 
@@ -180,7 +94,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = notesDAO.getNote(noteId).first()
+            val result = dataSource.getNote(noteId).first()
             if (result == null) {
                 _uiState.update { it.copy(isLoading = false) }
             } else {
@@ -190,7 +104,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
                         isLoading = false,
                         goal = result.goal,
                         date = result.date,
-                        weather = result.weather
+                       // weather = result.weather
                     )
                 }
             }
@@ -203,23 +117,21 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
             try {
                 _uiState.update { it.copy(isNoteSaving = true) }
                 if (noteId != null) {
-                    notesDAO.upsert(
-                        NotesMapper.toEntity(Note(
+                    dataSource.upsert(
+                       Note(
                             id = UUID.fromString(noteId),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
-                            weather = _uiState.value.weather
-                        ))
-
+                            //weather = _uiState.value.weather
+                        )
                     )
                 } else {
-                    notesDAO.upsert(
-                        NotesMapper.toEntity(
+                    dataSource.upsert(
                         Note(
+                            id = UUID.randomUUID(),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
-                            weather = _uiState.value.weather
-                        )
+                           // weather = _uiState.value.weather
                         )
                     )
                 }
@@ -242,7 +154,7 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
                 _uiState.update { it.copy(isNoteSaving = true) }
 
                 if(noteId!=null) {
-                    notesDAO.delete(UUID.fromString(noteId))
+                    dataSource.delete(UUID.fromString(noteId))
                 }
                 _uiState.update { it.copy(isNoteSaved = true) }
             }
@@ -257,8 +169,6 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-
-
     fun setNoteGoal(goal: String) {
         _uiState.update { it.copy(goal = goal) }
     }
@@ -272,10 +182,8 @@ class AddEditViewModel(application: Application) : AndroidViewModel(application)
     }
 }
 
-class HomeViewModel : ViewModel() {
-
-    private val notesDAO: NotesDataSourceDAO by KoinJavaComponent.inject(NotesDataSourceDAO::class.java)
-    private val notes = notesDAO.getNotes()
+class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
+    private val notes = dataSource.getNotes()
     private val notesLoadingItems = MutableStateFlow(0)
 
     val uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
@@ -308,7 +216,7 @@ class HomeViewModel : ViewModel() {
     fun deleteNote(noteId: UUID){
         viewModelScope.launch {
 
-            withLoading { notesDAO.delete(noteId) }
+            withLoading { dataSource.delete(noteId) }
         }
     }
 
