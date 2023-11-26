@@ -44,5 +44,5 @@ class MaskVisualTransformation(private val mask: String) : VisualTransformation 
 
 object DateDefaults {
     const val DATE_MASK = "##/##/####"
-    const val DATE_LENGTH = 8 // Equals to "##/##/####".count { it == '#' }
+    const val DATE_LENGTH = 10 // Equals to "##/##/####".count { it == '#' }
 }

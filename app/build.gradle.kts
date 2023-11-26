@@ -1,8 +1,10 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
+    kotlin("jvm") version "1.9.10" apply false
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.ksp)
+    kotlin("plugin.serialization") version "1.9.10"
 }
 
 ksp {
@@ -88,6 +90,17 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.bundles.compose)
     implementation(libs.bundles.ktor)
+
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.serialization)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    implementation(libs.androidx.monitor)
+
     implementation(libs.bundles.serialization)
     implementation(libs.kotlin.coroutines)
     implementation(libs.kotlin.reflect)
@@ -104,9 +117,6 @@ dependencies {
     implementation(libs.compose.ui.util)
     implementation(libs.compose.destinations)
     debugImplementation(libs.compose.tooling)
-
-
-
 }
 
 

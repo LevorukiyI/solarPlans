@@ -8,22 +8,18 @@ import by.bsuir.myapplication.database.entity.Constants.NOTE_TABLE
 import by.bsuir.myapplication.database.entity.Constants.WEATHER_TABLE
 import java.util.UUID
 
-//@Entity(tableName = WEATHER_TABLE)
-//data class WeatherEntity(
-//    val temperature: Int,
-//    val humidity: Int,
-//    val raininess: String,
-//    @PrimaryKey(autoGenerate = true)
-//    val  cloudCover: String
-//)
-
 @Entity(tableName = NOTE_TABLE)
 data class NoteEntity(
     @ColumnInfo(name = "goal")
     var goal: String,
     @ColumnInfo(name = "date")
     var date: String,
-    //val weather: Weather,
+    @ColumnInfo(name = "temp")
+    var temp: String,
+    @ColumnInfo(name="condition")
+    var condition: String,
+    @ColumnInfo(name="maxwind")
+    var maxwind: String,
     @PrimaryKey
     @ColumnInfo(name = "id")
     val id: UUID

@@ -12,7 +12,9 @@ object NotesMapper : Mapper<NoteEntity, Note> {
         return Note(
             goal = from.goal,
             date = from.date,
-            //weather = from.weather,
+            temp = from.temp,
+            maxwind = from.maxwind,
+            condition = from.condition,
             id = from.id,
         )
     }
@@ -21,7 +23,9 @@ object NotesMapper : Mapper<NoteEntity, Note> {
         return NoteEntity(
             goal = from.goal,
             date = from.date,
-            //weather = from.weather,
+            temp = from.temp,
+            maxwind = from.maxwind,
+            condition = from.condition,
             id = from.id,
         )
     }

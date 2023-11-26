@@ -99,10 +99,20 @@ androidx-ui-text = { group = "androidx.compose.ui", name = "ui-text", version = 
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version = "1.5.4" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version = "2.6.0" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version = "2.6.0" }
-
-
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version = "2.7.3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.7.3" }
+
+ktor-client = { group = "io.ktor", name = "ktor-client", version = "2.3.6" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version = "2.3.6" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version = "2.3.6" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version = "2.3.6" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version = "2.3.6" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.6.1" }
+ktor-ktor-serialization = { group = "io.ktor", name = "ktor-serialization", version = "2.3.6" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version = "2.3.6" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version = "2.3.6" }
+ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serialization", version = "2.3.6" }
+androidx-monitor = { group = "androidx.test", name = "monitor", version = "1.6.1" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

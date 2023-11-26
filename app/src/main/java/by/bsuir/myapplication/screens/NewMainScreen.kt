@@ -127,17 +127,17 @@ private fun NoteItem(
                     fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = note.date.substring(0,2)+ "." + note.date.substring(2,4)+ "." + note.date.substring(4,8),
+                    text = note.date,
                     modifier = Modifier
                         .padding(vertical = 3.dp, horizontal = 5.dp),
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp, color = MaterialTheme.colorScheme.primary
                 )
-//                Text(text = stringResource(id = R.string.temperature) + note.weather.temperature + stringResource(id =R.string.humidity) + note.weather.humidity + stringResource(id = R.string.raininess) + note.weather.raininess + stringResource(id = R.string.cloudCover) + note.weather.cloudCover,
-//                    modifier = Modifier
-//                        .padding(vertical = 3.dp, horizontal = 5.dp),
-//                    textAlign = TextAlign.Center,
-//                    fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+                Text(text = "Temperature: " +  note.temp + ", max wind: " + note.maxwind + ", condition: " + note.condition,
+                    modifier = Modifier
+                        .padding(vertical = 3.dp, horizontal = 5.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
             }
             }
             Row {

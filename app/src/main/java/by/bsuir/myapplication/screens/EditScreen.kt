@@ -42,7 +42,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScreen(id: String?, navController: NavController, coroutineScope: CoroutineScope, scaffoldState: ScaffoldState){
+fun EditScreen(
+    id: String?,
+    navController: NavController,
+    coroutineScope: CoroutineScope,
+    scaffoldState: ScaffoldState
+) {
     val viewModel = koinViewModel<AddEditViewModel>()
     viewModel.initViewModel(id)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -73,14 +78,14 @@ fun EditScreen(id: String?, navController: NavController, coroutineScope: Corout
                         textColor = MaterialTheme.colorScheme.primary,
                     ),
                     value = uiState.date,
-                    onValueChange = {newText ->
+                    onValueChange = { newText ->
                         if (newText.length <= DateDefaults.DATE_LENGTH) {
                             viewModel.setNoteDate(newText)
                         }
                     },
-                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
                     label = {
-                        androidx.compose.material3.Text(text = stringResource(id = R.string.date_label),
+                        androidx.compose.material3.Text(
+                            text = stringResource(id = R.string.date_label),
                             color = text_color
                         )
                     },
@@ -109,44 +114,123 @@ fun EditScreen(id: String?, navController: NavController, coroutineScope: Corout
                     maxLines = 7,
 
                     )
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
 
-                val list = remember {
-                    mutableStateListOf<String>()
-                }
-
-                Button(onClick = {
-
-                    if (id != null) {
-                        viewModel.saveNote()
-                    }
-                    coroutineScope.launch {
-                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "Note changed",
-                            actionLabel = "Ok"
+                    value = uiState.temp,
+                    onValueChange = { newText ->
+                        viewModel.setNoteTemp(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Temperature",
+                            color = text_color
                         )
-                    }
-                    navController.navigate(Screen.MainScreen.route)
+                    },
+                    maxLines = 7,
+                )
 
-                }, enabled = uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
-                    Text(text = stringResource(id = R.string.edit), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
-                }
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
 
-                Button(onClick = {
-                    if (id != null) {
-                        viewModel.deleteNote()
-                    }
-                    coroutineScope.launch {
-                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "Note deleted",
-                            actionLabel = "Ok"
+                    value = uiState.maxwind,
+                    onValueChange = { newText ->
+                        viewModel.setNoteMaxWind(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Max wind",
+                            color = text_color
                         )
-                    }
-                    navController.navigate(Screen.MainScreen.route)
+                    },
+                    maxLines = 7,
+                )
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
 
-                }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
-                    Text(text = stringResource(id = R.string.delete), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
+                    value = uiState.condition,
+                    onValueChange = { newText ->
+                        viewModel.setNoteCondition(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Condition",
+                            color = text_color
+                        )
+                    },
+                    maxLines = 7,
+                )
+
+                Button(
+                    onClick = {
+
+                        if (id != null) {
+                            viewModel.saveNote()
+                        }
+                        coroutineScope.launch {
+                            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "Note changed",
+                                actionLabel = "Ok"
+                            )
+                        }
+                        navController.navigate(Screen.MainScreen.route)
+
+                    },
+                    enabled =uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!="" && uiState.goal != "" && uiState.date != "" && uiState.date.length == 10,
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.edit),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
 
+                Button(
+                    onClick = {
+                        if (id != null) {
+                            viewModel.deleteNote()
+                        }
+                        coroutineScope.launch {
+                            val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
+                                message = "Note deleted",
+                                actionLabel = "Ok"
+                            )
+                        }
+                        navController.navigate(Screen.MainScreen.route)
+
+                    },
+                    modifier = Modifier.padding(vertical = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.delete),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
 
 
             }

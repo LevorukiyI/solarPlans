@@ -40,7 +40,7 @@ fun Navigation(navController: NavController, scaffoldState: ScaffoldState, corou
             AboutScreen()
         }
         composable(route = Screen.WeatherScreen.route) {
-            WeatherScreen()
+            WeatherScreen(navController = navController)
         }
         composable(route = Screen.AddScreen.route) {
             AddScreen(navController = navController, scaffoldState = scaffoldState, coroutineScope = coroutineScope)

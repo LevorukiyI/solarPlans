@@ -68,7 +68,9 @@ data class NoteUiState(
     val id: UUID = UUID.randomUUID(),
     val goal: String = "",
     val date: String = "",
-    val weather: Weather = Weather(0,0,"",""),
+    val temp: String = "",
+    val condition: String = "",
+    val maxwind: String ="",
 
     val isLoading: Boolean = false,
     val isNoteSaved: Boolean = false,
@@ -115,7 +117,9 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
                         isLoading = false,
                         goal = result.goal,
                         date = result.date,
-                       // weather = result.weather
+                        temp = result.temp,
+                        maxwind = result.maxwind,
+                        condition = result.condition
                     )
                 }
             }
@@ -133,7 +137,9 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
                             id = UUID.fromString(noteId),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
-                            //weather = _uiState.value.weather
+                           temp = _uiState.value.temp,
+                           maxwind = _uiState.value.maxwind,
+                           condition = _uiState.value.condition
                         )
                     )
                 } else {
@@ -142,7 +148,9 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
                             id = UUID.randomUUID(),
                             goal = _uiState.value.goal,
                             date = _uiState.value.date,
-                           // weather = _uiState.value.weather
+                            temp = _uiState.value.temp,
+                            maxwind = _uiState.value.maxwind,
+                            condition = _uiState.value.condition
                         )
                     )
                 }
@@ -188,9 +196,18 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
         _uiState.update { it.copy(date = date) }
     }
 
-    fun setNoteWeather(weather: Weather) {
-        _uiState.update { it.copy(weather = weather) }
+    fun setNoteTemp(temp:String){
+        _uiState.update { it.copy(temp = temp) }
     }
+
+    fun setNoteCondition(condition:String){
+        _uiState.update { it.copy(condition = condition) }
+    }
+
+    fun setNoteMaxWind(maxwind:String){
+        _uiState.update { it.copy(maxwind = maxwind) }
+    }
+
 }
 
 class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {

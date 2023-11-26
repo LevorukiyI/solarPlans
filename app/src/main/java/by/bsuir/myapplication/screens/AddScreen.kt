@@ -75,7 +75,6 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                             viewModel.setNoteDate(newText)
                         }
                     },
-                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
                     label = {
                         Text(text = stringResource(id = R.string.date_label),
                             color = text_color
@@ -107,6 +106,68 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
 
                     )
 
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
+
+                    value = uiState.temp,
+                    onValueChange = { newText ->
+                        viewModel.setNoteTemp(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Temperature",
+                            color = text_color
+                        )
+                    },
+                    maxLines = 7,
+                    )
+
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
+
+                    value = uiState.maxwind,
+                    onValueChange = { newText ->
+                        viewModel.setNoteMaxWind(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Max wind",
+                            color = text_color
+                        )
+                    },
+                    maxLines = 7,
+                )
+                OutlinedTextField(
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        //containerColor = Color.White,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = secondary_color,
+                        textColor = MaterialTheme.colorScheme.primary,
+                    ),
+
+                    value = uiState.condition,
+                    onValueChange = { newText ->
+                        viewModel.setNoteCondition(newText)
+                    },
+                    label = {
+                        Text(
+                            text = "Condition",
+                            color = text_color
+                        )
+                    },
+                    maxLines = 7,
+                )
+
                 Button(onClick = {
                     viewModel.saveNote()
                     coroutineScope.launch {
@@ -117,7 +178,7 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                     }
                     navController.navigate(Screen.MainScreen.route)
 
-                }, enabled = uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                }, enabled = uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!=""&& uiState.goal != "" && uiState.date != "" && uiState.date.length == 10,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 
