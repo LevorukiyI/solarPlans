@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -46,15 +46,15 @@ fun HomeScreen(navController: NavController/*, viewModel: HomeViewModel*/){
         Column(horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxSize()){
                 Button(onClick = {
                     navController.navigate(Screen.AddScreen.route)
-                }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(/*backgroundColor = MaterialTheme.colorScheme.background,*/ contentColor = MaterialTheme.colorScheme.primary)){
+                }, modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
             HomeScreenContent(
                 items = uiState.notes,
                 onEdit = { it -> navController.navigate(Screen.EditScreen.withArgs(it.id.toString()))},
                 onRemove = {
-                        uiState.notes = emptyList()
-                           viewModel.deleteNote(it)
+                    viewModel.deleteNote(it)
+                    navController.navigate(Screen.MainScreen.route)
                 },
                 navController = navController
             )

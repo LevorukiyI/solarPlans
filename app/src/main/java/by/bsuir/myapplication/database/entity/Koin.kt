@@ -4,8 +4,6 @@ import by.bsuir.myapplication.AddEditViewModel
 import by.bsuir.myapplication.HomeViewModel
 import by.bsuir.myapplication.NotesDataSource
 import by.bsuir.myapplication.RoomNotesDataSource
-import by.bsuir.myapplication.screens.HomeScreen
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

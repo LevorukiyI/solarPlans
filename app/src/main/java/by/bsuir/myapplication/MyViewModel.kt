@@ -8,8 +8,10 @@ import by.bsuir.myapplication.database.entity.Mapper
 
 import by.bsuir.myapplication.database.entity.NoteEntity
 import by.bsuir.myapplication.database.entity.NotesMapper
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +38,9 @@ interface NotesDataSource {
 }
 
 class RoomNotesDataSource(private val repository: DatabaseRepository) : NotesDataSource {
+
     override fun getNotes(): Flow<List<Note>> {
+
         return repository.getNotes().map {list -> list.map { NotesMapper.toDTO(it)}}
     }
 
@@ -77,6 +81,8 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 
     private var noteId: String? = null
 
+    private lateinit var note: Note
+
     private val _uiState = MutableStateFlow(NoteUiState())
     val uiState: StateFlow<NoteUiState> = _uiState.asStateFlow()
 
@@ -95,7 +101,11 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = dataSource.getNote(noteId).first()
+           // val result = dataSource.getNote(noteId).first()
+            val result: Note? = dataSource.getNotes().first().find{it.id == noteId}
+            if (result != null) {
+                note = result
+            }
             if (result == null) {
                 _uiState.update { it.copy(isLoading = false) }
             } else {
@@ -155,7 +165,7 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
                 _uiState.update { it.copy(isNoteSaving = true) }
 
                 if(noteId!=null) {
-                   // dataSource.delete(UUID.fromString(noteId))
+                   dataSource.delete(note)
                 }
                 _uiState.update { it.copy(isNoteSaved = true) }
             }
@@ -184,7 +194,7 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 }
 
 class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
-    private var notes = dataSource.getNotes()
+    public var notes = dataSource.getNotes()
     private val notesLoadingItems = MutableStateFlow(0)
 
     var uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
@@ -216,9 +226,9 @@ class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
     private fun removeLoadingElement() = notesLoadingItems.getAndUpdate { num -> num - 1 }
     fun deleteNote(note: Note){
         viewModelScope.launch {
-            withLoading { dataSource.delete(note)
+            withLoading {
+                dataSource.delete(note)
             }
         }
     }
-
 }
