@@ -83,6 +83,7 @@ fun EditScreen(
                             viewModel.setNoteDate(newText)
                         }
                     },
+                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
                     label = {
                         androidx.compose.material3.Text(
                             text = stringResource(id = R.string.date_label),
@@ -191,7 +192,7 @@ fun EditScreen(
                         navController.navigate(Screen.MainScreen.route)
 
                     },
-                    enabled =uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!="" && uiState.goal != "" && uiState.date != "" && uiState.date.length == 10,
+                    enabled =uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!="" && uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,
                     modifier = Modifier.padding(vertical = 16.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colorScheme.background,

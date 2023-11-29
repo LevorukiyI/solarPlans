@@ -75,6 +75,7 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                             viewModel.setNoteDate(newText)
                         }
                     },
+                    visualTransformation = MaskVisualTransformation(DateDefaults.DATE_MASK),
                     label = {
                         Text(text = stringResource(id = R.string.date_label),
                             color = text_color
@@ -178,7 +179,7 @@ fun AddScreen(navController: NavController, coroutineScope: CoroutineScope, scaf
                     }
                     navController.navigate(Screen.MainScreen.route)
 
-                }, enabled = uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!=""&& uiState.goal != "" && uiState.date != "" && uiState.date.length == 10,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
+                }, enabled = uiState.temp!=""&&uiState.maxwind!=""&& uiState.condition!=""&& uiState.goal != "" && uiState.date != "" && uiState.date.length == 8,modifier = Modifier.padding(vertical = 16.dp), colors =  ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colorScheme.background, contentColor = MaterialTheme.colorScheme.primary)){
                     Text(text = stringResource(id = R.string.addNote), fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
                 }
 
