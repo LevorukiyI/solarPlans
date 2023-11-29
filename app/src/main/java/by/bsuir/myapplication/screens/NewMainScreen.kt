@@ -32,8 +32,10 @@ import androidx.navigation.NavController
 import by.bsuir.myapplication.navigation.Screen
 import by.bsuir.vitaliybaranov.myapplication.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import by.bsuir.myapplication.DateDefaults
 
 import by.bsuir.myapplication.HomeViewModel
+import by.bsuir.myapplication.MaskVisualTransformation
 import by.bsuir.myapplication.Note
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
@@ -126,12 +128,12 @@ private fun NoteItem(
                     textAlign = TextAlign.Start,
                     fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
                 )
-                Text(
+                Text(///////////////////////////////////////////
                     text = note.date,
                     modifier = Modifier
                         .padding(vertical = 3.dp, horizontal = 5.dp),
                     textAlign = TextAlign.Center,
-                    fontSize = 14.sp, color = MaterialTheme.colorScheme.primary
+                    fontSize = 14.sp, color = MaterialTheme.colorScheme.primary,
                 )
                 Text(text = "Temperature: " +  note.temp + ", max wind: " + note.maxwind + ", condition: " + note.condition,
                     modifier = Modifier
