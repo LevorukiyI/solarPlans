@@ -3,6 +3,7 @@ package by.bsuir.myapplication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.bsuir.myapplication.MVI.MVIViewModel
 import by.bsuir.myapplication.database.entity.DatabaseRepository
 import by.bsuir.myapplication.database.entity.Mapper
 
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.timeout
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -56,13 +58,6 @@ class RoomNotesDataSource(private val repository: DatabaseRepository) : NotesDat
         repository.delete(NotesMapper.toEntity(e))
     }
 }
-
-data class NotesListUiState(
-    var notes: List<Note> = emptyList(),
-    val isLoading: Boolean = false,
-    val isError: Boolean = false
-)
-
 
 data class NoteUiState(
     val id: UUID = UUID.randomUUID(),
@@ -210,42 +205,103 @@ class AddEditViewModel(private val dataSource: NotesDataSource) : ViewModel() {
 
 }
 
-class HomeViewModel(private val dataSource: NotesDataSource) : ViewModel() {
-    public var notes = dataSource.getNotes()
+data class NotesListUiState(
+    var notes: List<Note> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: Throwable? = null
+)
+
+class HomeViewModel(private val dataSource: NotesDataSource)
+    : MVIViewModel<NotesListUiState, Unit, HomeEvent>(NotesListUiState(isLoading = true)) {
+    public val notes = dataSource.getNotes()
+    val _viewState = MutableStateFlow(NotesListUiState())
     private val notesLoadingItems = MutableStateFlow(0)
 
-    var uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
-        NotesListUiState(
-            notes = notes.toList(),
-            isLoading = loadingItems > 0,
-            isError = false
-        )
-
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = NotesListUiState(isLoading = true)
-    )
-
-
-
-    private suspend fun withLoading(block: suspend () -> Unit) {
-        try {
-            addLoadingElement()
-            block()
-        }
-        finally {
-            removeLoadingElement()
-        }
+    init {
+        loadNotes()
     }
 
-    private fun addLoadingElement() = notesLoadingItems.getAndUpdate { num -> num + 1 }
-    private fun removeLoadingElement() = notesLoadingItems.getAndUpdate { num -> num - 1 }
-    fun deleteNote(note: Note){
+    private fun loadNotes() {
         viewModelScope.launch {
-            withLoading {
-                dataSource.delete(note)
+            _viewState.value = _viewState.value.copy(isLoading = true)
+            try {
+                val notesList = dataSource.getNotes().toList()
+                val notes = notesList.flatten()
+                _viewState.value = _viewState.value.copy(notes = notes, isLoading = false)
+            } catch (e: Throwable) {
+                _viewState.value = _viewState.value.copy(error = e, isLoading = false)
             }
         }
     }
+    fun deleteNote(note: Note) {
+        event(HomeEvent.DeleteNoteEvent(note))
+    }
+    override suspend fun reduce(intent: Unit) {
+        // do nothing
+    }
+
+    suspend fun reduce(intent: HomeEvent) {
+        when (intent) {
+            is HomeEvent.DeleteNoteEvent -> handleDeleteNoteEvent(intent.note)
+        }
+    }
+
+    private suspend fun handleDeleteNoteEvent(note: Note) {
+        withLoading {
+            dataSource.delete(note)
+            val notesList = dataSource.getNotes().toList()
+            val notes = notesList.flatten()
+            state { copy(notes = notes, isLoading = false) }
+        }
+    }
+
+    private suspend fun withLoading(block: suspend () -> Unit) {
+        try {
+            state { copy(isLoading = true) }
+            block()
+        } finally {
+            state { copy(isLoading = false) }
+        }
+    }
 }
+
+sealed class HomeEvent {
+    data class DeleteNoteEvent(val note: Note) : HomeEvent()
+}
+
+
+//    var uiState = combine(notes, notesLoadingItems) { notes, loadingItems ->
+//        NotesListUiState(
+//            notes = notes.toList(),
+//            isLoading = loadingItems > 0,
+//            isError = false
+//        )
+//
+//    }.stateIn(
+//        scope = viewModelScope,
+//        started = SharingStarted.WhileSubscribed(5000),
+//        initialValue = NotesListUiState(isLoading = true)
+//    )
+//
+//
+//
+//    private suspend fun withLoading(block: suspend () -> Unit) {
+//        try {
+//            addLoadingElement()
+//            block()
+//        }
+//        finally {
+//            removeLoadingElement()
+//        }
+//    }
+//
+//    private fun addLoadingElement() = notesLoadingItems.getAndUpdate { num -> num + 1 }
+//    private fun removeLoadingElement() = notesLoadingItems.getAndUpdate { num -> num - 1 }
+//    fun deleteNote(note: Note){
+//        viewModelScope.launch {
+//            withLoading {
+//                dataSource.delete(note)
+//            }
+//        }
+//    }
+//}
