@@ -128,8 +128,8 @@ private fun NoteItem(
                     textAlign = TextAlign.Start,
                     fontSize = 20.sp, color = MaterialTheme.colorScheme.primary
                 )
-                Text(///////////////////////////////////////////
-                    text = note.date,
+                Text(
+                    text = note.date.substring(0,2)+ "/" + note.date.substring(2,4)+ "/" + note.date.substring(4,8),
                     modifier = Modifier
                         .padding(vertical = 3.dp, horizontal = 5.dp),
                     textAlign = TextAlign.Center,
