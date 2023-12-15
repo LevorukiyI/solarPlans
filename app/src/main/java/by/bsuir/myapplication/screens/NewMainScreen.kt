@@ -63,6 +63,7 @@ fun HomeScreen(navController: NavController/*, viewModel: HomeViewModel*/){
     }
 }
 
+
 @Composable
 private fun HomeScreenContent(
     items: List<Note>,
